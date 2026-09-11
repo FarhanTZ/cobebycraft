@@ -413,15 +413,15 @@ export default function App() {
       )}
 
       {/* FIXED PINNED 3D TILTED VIDEO SCREEN (Sisi Kanan Menetap - Layer Belakang Teks) */}
-      <div className="fixed top-0 right-0 w-full h-screen pointer-events-none z-20 flex items-center justify-end px-6 sm:px-10 md:px-14 overflow-hidden">
+      <div className="fixed top-0 right-0 w-full h-screen pointer-events-none z-10 lg:z-20 flex items-center justify-center lg:justify-end px-4 sm:px-8 md:px-10 lg:px-14 overflow-hidden">
         <div className="w-full max-w-[1850px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center h-full">
           <div className="lg:col-span-5 hidden lg:block" />
           
-          <div className="lg:col-span-7 flex items-center justify-end relative perspective-[1800px] lg:-ml-28 -mr-3 sm:-mr-6 lg:mr-0 pointer-events-auto">
-            {/* Tilted Video Screen (Slightly Enlarged Balanced Size) */}
+          <div className="lg:col-span-7 flex items-center justify-center lg:justify-end relative perspective-[1800px] lg:-ml-28 pointer-events-auto">
+            {/* Tilted Video Screen (Optimized Responsive Sizing) */}
             <div
               ref={screenWrapperRef}
-              className="relative w-full aspect-[16/10] min-h-[420px] sm:min-h-[520px] lg:min-h-[580px] xl:min-h-[660px] max-w-[1050px] xl:max-w-[1180px] rounded-3xl will-change-transform pointer-events-auto"
+              className="relative w-full aspect-[16/10] max-h-[65vh] sm:max-h-[75vh] min-h-[220px] sm:min-h-[340px] md:min-h-[440px] lg:min-h-[560px] xl:min-h-[640px] max-w-[92vw] sm:max-w-[85vw] md:max-w-[720px] lg:max-w-[1050px] xl:max-w-[1180px] rounded-2xl sm:rounded-3xl will-change-transform pointer-events-auto opacity-35 sm:opacity-50 md:opacity-75 lg:opacity-100 transition-opacity duration-500"
               style={{
                 transformStyle: 'preserve-3d',
               }}
@@ -450,7 +450,7 @@ export default function App() {
 
       {/* 5. Smooth Black Gradient Shadow on Right Side when Indicators are Visible */}
       <div
-        className={`fixed top-0 right-0 h-full w-72 sm:w-96 md:w-[440px] pointer-events-none z-30 bg-gradient-to-l from-black/85 via-black/40 to-transparent transition-opacity duration-500 ease-out ${
+        className={`fixed top-0 right-0 h-full w-48 sm:w-72 md:w-96 lg:w-[440px] pointer-events-none z-30 bg-gradient-to-l from-black/85 via-black/40 to-transparent transition-opacity duration-500 ease-out ${
           isIndicatorVisible ? 'opacity-100' : 'opacity-0'
         }`}
       />
@@ -462,9 +462,9 @@ export default function App() {
           setIsHoveringIndicators(false)
           setHoveredProjectIndex(null)
         }}
-        className={`fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-40 p-4 flex flex-col space-y-4 transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) origin-right select-none ${
+        className={`fixed right-2 sm:right-4 md:right-6 top-1/2 -translate-y-1/2 z-40 p-2 sm:p-4 flex flex-col space-y-3 sm:space-y-4 transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) origin-right select-none ${
           isIndicatorHovered
-            ? 'scale-110 sm:scale-120 opacity-100 translate-x-0 pointer-events-auto'
+            ? 'scale-105 sm:scale-115 opacity-100 translate-x-0 pointer-events-auto'
             : isIndicatorVisible
             ? 'scale-100 opacity-90 translate-x-0 pointer-events-auto'
             : 'scale-95 opacity-0 translate-x-8 pointer-events-none'
@@ -481,7 +481,7 @@ export default function App() {
             >
               {/* MINI VIDEO PREVIEW (Langsung Kotak Video dengan Judul di Atasnya) */}
               <div
-                className={`absolute right-full mr-5 pointer-events-none transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1) flex flex-col items-start origin-right gap-1.5 ${
+                className={`absolute right-full mr-3 sm:mr-5 pointer-events-none transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1) hidden sm:flex flex-col items-start origin-right gap-1.5 ${
                   isHovered
                     ? 'opacity-100 translate-x-0 scale-100'
                     : 'opacity-0 translate-x-4 scale-90 pointer-events-none'
@@ -502,7 +502,7 @@ export default function App() {
 
                 {/* Kotak Video Langsung */}
                 <div
-                  className="w-52 sm:w-60 aspect-[16/10] rounded-xl overflow-hidden bg-black/90 border shadow-2xl relative"
+                  className="w-48 sm:w-60 aspect-[16/10] rounded-xl overflow-hidden bg-black/90 border shadow-2xl relative"
                   style={{
                     boxShadow: `0 10px 30px -5px ${proj.color}55`,
                     borderColor: `${proj.color}90`,
@@ -526,12 +526,12 @@ export default function App() {
                 onClick={() => scrollToSection(idx)}
                 onMouseEnter={() => setHoveredProjectIndex(idx)}
                 onMouseLeave={() => setHoveredProjectIndex(null)}
-                className="group flex items-center space-x-3.5 cursor-pointer py-1.5 focus:outline-none"
+                className="group flex items-center space-x-2 sm:space-x-3.5 cursor-pointer py-1 sm:py-1.5 focus:outline-none"
                 title={proj.title}
               >
                 {/* Nomor Proyek */}
                 <span
-                  className={`text-[11px] font-mono transition-all duration-300 ${
+                  className={`text-[10px] sm:text-[11px] font-mono transition-all duration-300 ${
                     isActive || isHovered || isIndicatorHovered
                       ? 'text-white font-bold translate-x-0 opacity-100'
                       : 'text-slate-400 translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0'
@@ -545,16 +545,16 @@ export default function App() {
 
                 {/* Dot / Bar Dinamis */}
                 <span
-                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                  className={`h-2 sm:h-2.5 rounded-full transition-all duration-300 ${
                     isActive
                       ? isIndicatorHovered
-                        ? 'w-10 bg-cyan-400 shadow-lg shadow-cyan-400/60'
-                        : 'w-8 bg-cyan-400 shadow-lg shadow-cyan-400/50'
+                        ? 'w-8 sm:w-10 bg-cyan-400 shadow-lg shadow-cyan-400/60'
+                        : 'w-6 sm:w-8 bg-cyan-400 shadow-lg shadow-cyan-400/50'
                       : isHovered
-                      ? 'w-6 bg-white shadow-md shadow-white/40'
+                      ? 'w-5 sm:w-6 bg-white shadow-md shadow-white/40'
                       : isIndicatorHovered
-                      ? 'w-3.5 bg-white/40 group-hover:bg-white/70'
-                      : 'w-2 bg-white/30 group-hover:bg-white/70'
+                      ? 'w-3 sm:w-3.5 bg-white/40 group-hover:bg-white/70'
+                      : 'w-1.5 sm:w-2 bg-white/30 group-hover:bg-white/70'
                   }`}
                   style={{
                     backgroundColor: isActive ? proj.color : isHovered ? '#ffffff' : undefined,
@@ -568,7 +568,7 @@ export default function App() {
       </div>
 
       {/* SEAMLESS SCROLLABLE SECTIONS (Layer Depan - Title Tampil di Atas Layar Video) */}
-      <div className="relative z-30 w-full max-w-[1850px] mx-auto px-6 sm:px-10 md:px-14 pointer-events-none">
+      <div className="relative z-30 w-full max-w-[1850px] mx-auto px-4 sm:px-8 md:px-12 lg:px-14 pointer-events-none">
         {PROJECTS.map((project, index) => {
           const projectSubtitle = t.projects[project.id]?.subtitle || project.subtitle
 
@@ -578,44 +578,44 @@ export default function App() {
               ref={(el) => {
                 sectionsRef.current[index] = el
               }}
-              className="min-h-screen flex items-center relative py-28 pointer-events-none"
+              className="min-h-screen flex items-center relative py-20 sm:py-28 pointer-events-none"
             >
               <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
                 {/* KOLOM KIRI: Title Gede, Subtitle & Tombol Explore (Berada di Layer Depan) */}
-                <div className="lg:col-span-6 xl:col-span-6 flex flex-col justify-center space-y-6 sm:space-y-8 z-30 pointer-events-auto relative">
+                <div className="lg:col-span-6 xl:col-span-6 flex flex-col justify-center space-y-4 sm:space-y-6 md:space-y-8 z-30 pointer-events-auto relative">
                   {/* Container Title & Subtitle */}
-                  <div className="space-y-3 relative z-30">
+                  <div className="space-y-2 sm:space-y-3 relative z-30">
                     {/* Title Besar, Tebal, dan Megah di Depan Layar */}
-                    <h2 className="project-title font-syne font-extrabold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-white leading-[0.95] select-none drop-shadow-[0_15px_35px_rgba(0,0,0,0.9)] max-w-2xl lg:max-w-3xl">
+                    <h2 className="project-title font-syne font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-white leading-[1.04] sm:leading-[0.95] select-none drop-shadow-[0_15px_35px_rgba(0,0,0,0.9)] max-w-full lg:max-w-3xl break-words">
                       {project.title}
                     </h2>
 
                     {/* Subtitle Ringkas (2-3 kata) di bawah Title */}
-                    <p className="project-subtitle text-slate-300 font-outfit text-lg sm:text-xl lg:text-2xl font-medium tracking-wide drop-shadow-md select-none">
+                    <p className="project-subtitle text-slate-300 font-outfit text-base sm:text-lg md:text-xl lg:text-2xl font-medium tracking-wide drop-shadow-md select-none">
                       {projectSubtitle}
                     </p>
                   </div>
 
                   {/* Tombol Explore & Info */}
-                  <div className="explore-button flex items-center space-x-3 sm:space-x-4 pt-1 relative z-30">
+                  <div className="explore-button flex flex-wrap items-center gap-2.5 sm:gap-4 pt-1 relative z-30">
                     {/* Tombol Explore */}
                     <a
                       href={project.exploreUrl || '#'}
                       target={project.exploreUrl ? '_blank' : undefined}
                       rel={project.exploreUrl ? 'noopener noreferrer' : undefined}
-                      className="inline-flex items-center space-x-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-white text-slate-950 font-syne font-extrabold text-sm sm:text-base tracking-tight hover:bg-slate-200 transition-all shadow-2xl shadow-white/20 active:scale-95 cursor-pointer group no-underline"
+                      className="inline-flex items-center space-x-2 sm:space-x-2.5 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl bg-white text-slate-950 font-syne font-extrabold text-xs sm:text-sm md:text-base tracking-tight hover:bg-slate-200 transition-all shadow-2xl shadow-white/20 active:scale-95 cursor-pointer group no-underline"
                     >
                       <span>{t.hero.explore}</span>
-                      <ArrowRight className="w-4 h-4 stroke-[2.8] group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.8] group-hover:translate-x-1 transition-transform" />
                     </a>
 
                     {/* Tombol Info Project */}
                     <button
                       type="button"
                       onClick={() => setSelectedInfoProject(project)}
-                      className="inline-flex items-center space-x-2 px-5 sm:px-7 py-3.5 sm:py-4 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-syne font-bold text-sm sm:text-base tracking-tight border border-white/20 hover:border-white/40 transition-all backdrop-blur-md shadow-lg shadow-black/40 active:scale-95 cursor-pointer group"
+                      className="inline-flex items-center space-x-2 px-4 sm:px-7 py-3 sm:py-4 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-syne font-bold text-xs sm:text-sm md:text-base tracking-tight border border-white/20 hover:border-white/40 transition-all backdrop-blur-md shadow-lg shadow-black/40 active:scale-95 cursor-pointer group"
                     >
-                      <Info className="w-4.5 h-4.5 stroke-[2.5] text-cyan-400 group-hover:rotate-12 transition-transform" />
+                      <Info className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.5] text-cyan-400 group-hover:rotate-12 transition-transform" />
                       <span>{t.hero.info}</span>
                     </button>
                   </div>

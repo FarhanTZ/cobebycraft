@@ -338,7 +338,7 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
         <button
           type="button"
           onClick={handleClose}
-          className="fixed top-6 right-6 sm:top-8 sm:right-10 z-50 p-3 sm:p-3.5 rounded-full bg-white/10 hover:bg-white/20 active:scale-90 border border-white/15 text-white/80 hover:text-white transition-all backdrop-blur-xl shadow-2xl cursor-pointer group flex items-center justify-center"
+          className="fixed top-4 right-4 sm:top-6 sm:right-8 md:top-8 md:right-10 z-50 p-2.5 sm:p-3.5 rounded-full bg-white/10 hover:bg-white/20 active:scale-90 border border-white/15 text-white/80 hover:text-white transition-all backdrop-blur-xl shadow-2xl cursor-pointer group flex items-center justify-center"
           title="Close (ESC)"
           aria-label="Close modal"
         >
@@ -346,48 +346,48 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
         </button>
 
         {/* 2. MINIMALIST CLEAN PRESENTATION CONTENT */}
-        <main className="max-w-[1700px] mx-auto w-full px-6 sm:px-10 md:px-14 pt-10 sm:pt-14 pb-8 my-auto flex-1 flex flex-col justify-center">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+        <main className="max-w-[1700px] mx-auto w-full px-4 sm:px-8 md:px-12 lg:px-14 pt-16 sm:pt-20 md:pt-14 pb-8 my-auto flex-1 flex flex-col justify-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
             {/* Kolom Kiri: Title, Subtitle, Deskripsi Ringkas, & Teknologi */}
             <div
               ref={leftColRef}
-              className="lg:col-span-6 flex flex-col justify-center space-y-6 sm:space-y-8 will-change-transform"
+              className="lg:col-span-6 flex flex-col justify-center space-y-4 sm:space-y-6 md:space-y-8 will-change-transform"
             >
-              <div className="space-y-2.5">
+              <div className="space-y-2 sm:space-y-2.5">
                 {/* Title Besar & Megah */}
-                <h1 className="font-syne font-extrabold text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-white tracking-tight leading-[1.02] drop-shadow-md">
+                <h1 className="font-syne font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white tracking-tight leading-[1.04] sm:leading-[1.02] drop-shadow-md">
                   {displayProject.title}
                 </h1>
 
                 {/* Tanggal / Tahun di bawah Title tanpa dibungkus card */}
-                <div className="text-slate-400 font-mono text-sm sm:text-base font-normal tracking-wider">
+                <div className="text-slate-400 font-mono text-xs sm:text-sm md:text-base font-normal tracking-wider">
                   {displayProject.year}
                 </div>
 
                 {/* Subtitle Ringkas */}
-                <p className="text-slate-300 font-outfit text-xl sm:text-2xl font-medium tracking-wide pt-1">
+                <p className="text-slate-300 font-outfit text-lg sm:text-xl md:text-2xl font-medium tracking-wide pt-0.5 sm:pt-1">
                   {currentSubtitle}
                 </p>
               </div>
 
               {/* Deskripsi Teks Proyek (Bersih & Elegan) */}
-              <div className="space-y-2 pt-1">
-                <p className="text-slate-300 text-base sm:text-lg lg:text-xl leading-relaxed font-normal">
+              <div className="space-y-2 pt-0.5 sm:pt-1">
+                <p className="text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed font-normal">
                   {currentDescription}
                 </p>
               </div>
 
               {/* Tombol Aksi Explore Live */}
               {displayProject.exploreUrl && (
-                <div className="pt-2">
+                <div className="pt-1 sm:pt-2">
                   <a
                     href={displayProject.exploreUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-3 px-8 py-4 rounded-2xl bg-white text-slate-950 font-syne font-extrabold text-sm sm:text-base tracking-tight hover:bg-slate-200 transition-all shadow-2xl shadow-white/25 active:scale-95 cursor-pointer group no-underline"
+                    className="inline-flex items-center space-x-2.5 sm:space-x-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-white text-slate-950 font-syne font-extrabold text-xs sm:text-sm md:text-base tracking-tight hover:bg-slate-200 transition-all shadow-2xl shadow-white/25 active:scale-95 cursor-pointer group no-underline"
                   >
                     <span>{t.projectModal.exploreLive}</span>
-                    <ExternalLink className="w-4.5 h-4.5 stroke-[2.8] group-hover:translate-x-1 transition-transform" />
+                    <ExternalLink className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.8] group-hover:translate-x-1 transition-transform" />
                   </a>
                 </div>
               )}
@@ -399,7 +399,7 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
               className="lg:col-span-6 relative will-change-transform"
             >
               <div
-                className="relative w-full aspect-[16/10] rounded-3xl overflow-hidden bg-black/90 border border-white/20 shadow-2xl group select-none"
+                className="relative w-full aspect-[16/10] rounded-2xl sm:rounded-3xl overflow-hidden bg-black/90 border border-white/20 shadow-2xl group select-none"
                 style={{
                   boxShadow: `0 25px 60px -15px ${displayProject.color}45`,
                   borderColor: `${displayProject.color}60`,
@@ -419,33 +419,33 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
 
                 {/* Floating Media Controls Bar */}
-                <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between px-4 py-2.5 rounded-2xl bg-black/70 backdrop-blur-xl border border-white/15">
-                  <div className="flex items-center space-x-3">
+                <div className="absolute bottom-2.5 sm:bottom-4 left-2.5 sm:left-4 right-2.5 sm:right-4 z-20 flex items-center justify-between px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl bg-black/70 backdrop-blur-xl border border-white/15">
+                  <div className="flex items-center space-x-2 sm:space-x-3">
                     <button
                       type="button"
                       onClick={togglePlay}
-                      className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all active:scale-90 cursor-pointer"
+                      className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all active:scale-90 cursor-pointer"
                       title={isPlaying ? t.projectModal.pause : t.projectModal.play}
                     >
-                      {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
+                      {isPlaying ? <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current ml-0.5" />}
                     </button>
 
                     <button
                       type="button"
                       onClick={toggleMute}
-                      className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all active:scale-90 cursor-pointer"
+                      className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all active:scale-90 cursor-pointer"
                       title={isMuted ? t.projectModal.unmute : t.projectModal.mute}
                     >
-                      {isMuted ? <VolumeX className="w-4 h-4 text-slate-400" /> : <Volume2 className="w-4 h-4 text-cyan-400" />}
+                      {isMuted ? <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" /> : <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400" />}
                     </button>
 
-                    <span className="text-xs font-mono text-slate-300 font-semibold">
+                    <span className="text-[11px] sm:text-xs font-mono text-slate-300 font-semibold truncate max-w-[120px] sm:max-w-[200px]">
                       {displayProject.title}
                     </span>
                   </div>
 
                   <span
-                    className="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold tracking-wider text-white bg-black/60 border border-white/10"
+                    className="px-2 sm:px-2.5 py-0.5 rounded-md text-[9px] sm:text-[10px] font-mono font-bold tracking-wider text-white bg-black/60 border border-white/10 whitespace-nowrap"
                     style={{ color: displayProject.color }}
                   >
                     {t.projectModal.livePreview}
@@ -457,14 +457,14 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
 
           {/* 3. TECHNOLOGIES USED - PALING BAWAH (CIRCULAR ICON BADGES) */}
           {displayProject.tags && displayProject.tags.length > 0 && (
-            <div className="mt-10 sm:mt-14 pt-7 sm:pt-8 border-t border-white/[0.08] flex flex-col items-center justify-center space-y-4">
+            <div className="mt-8 sm:mt-12 md:mt-14 pt-6 sm:pt-8 border-t border-white/[0.08] flex flex-col items-center justify-center space-y-3 sm:space-y-4">
               <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono text-slate-300">
                 <Code2 className="w-3.5 h-3.5" style={{ color: displayProject.color }} />
-                <span className="uppercase tracking-wider font-semibold text-[11px]">{t.projectModal.technologiesUsed}</span>
+                <span className="uppercase tracking-wider font-semibold text-[10px] sm:text-[11px]">{t.projectModal.technologiesUsed}</span>
               </div>
 
               {/* Barisan Icon Bundar-Bundar */}
-              <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 pt-0.5">
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 md:gap-6 pt-0.5">
                 {displayProject.tags.map((tag, idx) => (
                   <TechCircleBadge
                     key={idx}
@@ -477,7 +477,7 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
           )}
 
           {/* 4. SUBTLE FOOTER (DENGAN JARAK PAS) */}
-          <footer className="mt-8 sm:mt-10 pt-2 pb-4 text-center text-xs font-mono text-slate-500">
+          <footer className="mt-6 sm:mt-8 md:mt-10 pt-2 pb-4 text-center text-xs font-mono text-slate-500">
             {t.projectModal.footerEsc}
           </footer>
         </main>

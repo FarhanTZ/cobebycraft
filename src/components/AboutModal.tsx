@@ -322,7 +322,7 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
         <button
           type="button"
           onClick={handleClose}
-          className="fixed top-6 right-6 sm:top-8 sm:right-10 z-50 p-3 sm:p-3.5 rounded-full bg-white/10 hover:bg-white/20 active:scale-90 border border-white/15 text-white/80 hover:text-white transition-all backdrop-blur-xl shadow-2xl cursor-pointer group flex items-center justify-center"
+          className="fixed top-4 right-4 sm:top-6 sm:right-8 md:top-8 md:right-10 z-50 p-2.5 sm:p-3.5 rounded-full bg-white/10 hover:bg-white/20 active:scale-90 border border-white/15 text-white/80 hover:text-white transition-all backdrop-blur-xl shadow-2xl cursor-pointer group flex items-center justify-center"
           title="Close (ESC)"
           aria-label="Close About modal"
         >
@@ -330,54 +330,54 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
         </button>
 
         {/* 2. FULL LEFT-ALIGNED CONTENT (TITLE ABOUT + LARGE DESCRIPTION + CORE TECHNOLOGY) */}
-        <main className="max-w-6xl mx-auto w-full px-6 sm:px-12 md:px-20 pt-20 sm:pt-28 pb-16 my-auto flex-1 flex flex-col justify-center items-start text-left">
+        <main className="max-w-6xl mx-auto w-full px-4 sm:px-8 md:px-14 lg:px-20 pt-16 sm:pt-24 md:pt-28 pb-12 sm:pb-16 my-auto flex-1 flex flex-col justify-center items-start text-left">
           {/* A. TITLE: ABOUT */}
           <div ref={heroRef} className="space-y-3 max-w-6xl w-full text-left">
-            <h1 className="font-syne font-extrabold text-6xl sm:text-8xl md:text-9xl text-white tracking-tight leading-[0.92] drop-shadow-2xl">
+            <h1 className="font-syne font-extrabold text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-white tracking-tight leading-[0.95] sm:leading-[0.92] drop-shadow-2xl">
               {t.aboutModal.title}
             </h1>
           </div>
 
-          {/* B. ABOUT PENJELASAN (EXTRA LARGE & SUPER BOLD/CLEAR) */}
-          <div ref={descRef} className="mt-10 sm:mt-14 max-w-6xl w-full space-y-8 sm:space-y-10 text-left">
-            <p className="text-slate-100 text-xl sm:text-2xl md:text-3xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
+          {/* B. ABOUT PENJELASAN (RESPONSIVE & SUPER BOLD/CLEAR) */}
+          <div ref={descRef} className="mt-8 sm:mt-12 md:mt-14 max-w-6xl w-full space-y-6 sm:space-y-8 md:space-y-10 text-left">
+            <p className="text-slate-100 text-base sm:text-xl md:text-2xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
               <strong className="text-white font-semibold">{t.aboutModal.manifestoP1Strong}</strong>{t.aboutModal.manifestoP1Text1}<em className="text-cyan-300 not-italic font-medium">{t.aboutModal.manifestoP1Craft}</em>{t.aboutModal.manifestoP1Text2}
             </p>
 
-            <p className="text-slate-200 text-xl sm:text-2xl md:text-3xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
+            <p className="text-slate-200 text-base sm:text-xl md:text-2xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
               {t.aboutModal.manifestoP2Text1}
             </p>
-            <p className="text-slate-200 text-xl sm:text-2xl md:text-3xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
+            <p className="text-slate-200 text-base sm:text-xl md:text-2xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
               {t.aboutModal.manifestoP2Text2}
             </p>
           </div>
 
           {/* C. WORK HISTORY */}
-          <div className="mt-14 sm:mt-20 pt-10 border-t border-white/[0.08] max-w-6xl w-full space-y-8 text-left">
-            <h2 className="font-syne font-extrabold text-4xl sm:text-5xl md:text-6xl text-white tracking-tight leading-[0.98]">
+          <div className="mt-10 sm:mt-16 md:mt-20 pt-8 sm:pt-10 border-t border-white/[0.08] max-w-6xl w-full space-y-6 sm:space-y-8 text-left">
+            <h2 className="font-syne font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white tracking-tight leading-[0.98]">
               {t.aboutModal.workHistoryTitle}
             </h2>
 
-            <div className="space-y-6 sm:space-y-8">
-              <p className="text-slate-100 text-xl sm:text-2xl md:text-3xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
+            <div className="space-y-5 sm:space-y-7 md:space-y-8">
+              <p className="text-slate-100 text-base sm:text-xl md:text-2xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
                 {t.aboutModal.workHistoryP1Text1}<strong className="text-white font-semibold">{t.aboutModal.workHistoryP1Strong}</strong> {t.aboutModal.workHistoryP1Text2}
               </p>
 
-              <p className="text-slate-200 text-xl sm:text-2xl md:text-3xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
+              <p className="text-slate-200 text-base sm:text-xl md:text-2xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
                 {t.aboutModal.workHistoryP2}
               </p>
             </div>
           </div>
 
           {/* D. CORE TECHNOLOGIES & TOOLS */}
-          <div ref={toolsRef} className="w-full mt-16 sm:mt-20 pt-10 border-t border-white/[0.08] flex flex-col items-start justify-start space-y-6">
-            <div className="inline-flex items-center space-x-2.5 px-4 py-2 rounded-full bg-white/[0.04] border border-white/10 text-xs sm:text-sm font-mono text-slate-300">
-              <Code2 className="w-4 h-4 text-cyan-400" />
-              <span className="uppercase tracking-wider font-semibold text-xs sm:text-[13px]">{t.aboutModal.coreTechTitle}</span>
+          <div ref={toolsRef} className="w-full mt-12 sm:mt-16 md:mt-20 pt-8 sm:pt-10 border-t border-white/[0.08] flex flex-col items-start justify-start space-y-4 sm:space-y-6">
+            <div className="inline-flex items-center space-x-2.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/[0.04] border border-white/10 text-xs sm:text-sm font-mono text-slate-300">
+              <Code2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400" />
+              <span className="uppercase tracking-wider font-semibold text-[11px] sm:text-xs md:text-[13px]">{t.aboutModal.coreTechTitle}</span>
             </div>
 
             {/* Barisan Icon Bundar-Bundar Rata Kiri */}
-            <div className="flex flex-wrap items-center justify-start gap-5 sm:gap-7 pt-2 max-w-5xl">
+            <div className="flex flex-wrap items-center justify-start gap-3.5 sm:gap-5 md:gap-7 pt-2 max-w-5xl">
               {ABOUT_TAGS.map((tech, idx) => (
                 <TechCircleBadge
                   key={idx}
@@ -389,7 +389,7 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
           </div>
 
           {/* E. SUBTLE FOOTER RETURN NOTE */}
-          <footer className="mt-14 pt-2 text-left text-xs font-mono text-slate-500">
+          <footer className="mt-10 sm:mt-14 pt-2 text-left text-xs font-mono text-slate-500">
             {t.aboutModal.footerEsc}
           </footer>
         </main>
