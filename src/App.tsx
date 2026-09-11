@@ -216,7 +216,10 @@ export default function App() {
       <Navbar />
 
       {/* Fluid Liquid Bubble Custom Cursor */}
-      <CustomCursor color={currentProject.color} />
+      <CustomCursor
+        color={currentProject.color}
+        secondaryColor={currentProject.secondaryColor}
+      />
 
       {/* FIXED PINNED 3D TILTED VIDEO SCREEN (Sisi Kanan Menetap & Interaktif) */}
       <div className="fixed top-0 right-0 w-full h-screen pointer-events-none z-30 flex items-center justify-end px-6 sm:px-10 md:px-14 overflow-hidden">
