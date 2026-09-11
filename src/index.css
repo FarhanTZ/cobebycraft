@@ -16,9 +16,24 @@
     color: #f3f4f6;
     font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     overflow-x: hidden;
-    /* Sembunyikan scrollbar bawaan browser (Firefox, IE/Edge) */
+    /* Sembunyikan scrollbar bawaan browser */
     scrollbar-width: none;
     -ms-overflow-style: none;
+  }
+
+  /* Sembunyikan kursor default bawaan browser pada desktop */
+  @media (min-width: 768px) {
+    *,
+    *::before,
+    *::after,
+    html,
+    body,
+    button,
+    a,
+    input,
+    video {
+      cursor: none !important;
+    }
   }
 
   /* Sembunyikan scrollbar bawaan browser (Chrome, Safari, Edge, Opera) */

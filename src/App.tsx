@@ -5,6 +5,7 @@ import { useGSAP } from '@gsap/react'
 import { ArrowRight } from 'lucide-react'
 import Navbar from './components/Navbar'
 import VideoScreen3D from './components/VideoScreen3D'
+import CustomCursor from './components/CustomCursor'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
@@ -213,6 +214,9 @@ export default function App() {
 
       {/* Seamless Fixed Navbar */}
       <Navbar />
+
+      {/* Fluid Liquid Bubble Custom Cursor */}
+      <CustomCursor color={currentProject.color} />
 
       {/* FIXED PINNED 3D TILTED VIDEO SCREEN (Sisi Kanan Menetap & Interaktif) */}
       <div className="fixed top-0 right-0 w-full h-screen pointer-events-none z-30 flex items-center justify-end px-6 sm:px-10 md:px-14 overflow-hidden">
