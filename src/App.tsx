@@ -20,32 +20,35 @@ interface Project {
   color: string
   secondaryColor: string
   videoUrl: string
+  exploreUrl?: string
 }
 
 const PROJECTS: Project[] = [
   {
-    id: 'aura-ai',
+    id: 'grab-interactive',
     number: '01',
-    title: 'Aura AI Engine',
-    subtitle: 'Autonomous Neural Workflow',
-    client: 'Aura Research Labs',
+    title: 'Grab Interactive',
+    subtitle: 'Everyday SuperApp Platform',
+    client: 'Grab Holdings',
     metric: '4.8x Faster Inference',
     year: '2026',
-    color: '#38bdf8',
-    secondaryColor: '#818cf8',
+    color: '#00b14f',
+    secondaryColor: '#38bdf8',
     videoUrl: '/video/grab_video.mp4',
+    exploreUrl: 'https://grab-interactive-landing.vercel.app/',
   },
   {
-    id: 'nexus-spatial',
+    id: 'pixar-characters',
     number: '02',
-    title: 'Nexus Spatial OS',
-    subtitle: 'Next-Gen 3D Web Canvas',
-    client: 'Nexus Foundation',
-    metric: '60 FPS WebGL Engine',
+    title: 'Pixar Characters',
+    subtitle: 'Interactive 3D Universe',
+    client: 'Pixar Animation Studios',
+    metric: 'Realtime 3D Canvas',
     year: '2026',
-    color: '#a855f7',
-    secondaryColor: '#ec4899',
-    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-circuit-board-technology-animation-41525-large.mp4',
+    color: '#38bdf8',
+    secondaryColor: '#f59e0b',
+    videoUrl: '/video/pixar_video.mp4',
+    exploreUrl: 'https://pixar-character.vercel.app/',
   },
   {
     id: 'kroma-studio',
@@ -220,11 +223,12 @@ export default function App() {
         if (!section) return
 
         const title = section.querySelector('.project-title')
+        const subtitle = section.querySelector('.project-subtitle')
         const button = section.querySelector('.explore-button')
 
         // Parallax and entrance/exit animation for text on scroll
         gsap.fromTo(
-          [title, button],
+          [title, subtitle, button],
           {
             opacity: 0.15,
             y: 60,
@@ -391,22 +395,32 @@ export default function App() {
             className="min-h-screen flex items-center relative py-28 pointer-events-none"
           >
             <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-              {/* KOLOM KIRI: Title Gede & Tombol Explore (Berada di Layer Depan) */}
-              <div className="lg:col-span-6 xl:col-span-6 flex flex-col justify-center space-y-8 z-30 pointer-events-auto relative">
-                {/* Title Besar, Tebal, dan Megah di Depan Layar */}
-                <h2 className="project-title font-syne font-extrabold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-white leading-[0.95] select-none drop-shadow-[0_15px_35px_rgba(0,0,0,0.9)] relative z-30 max-w-2xl lg:max-w-3xl">
-                  {project.title}
-                </h2>
+              {/* KOLOM KIRI: Title Gede, Subtitle & Tombol Explore (Berada di Layer Depan) */}
+              <div className="lg:col-span-6 xl:col-span-6 flex flex-col justify-center space-y-6 sm:space-y-8 z-30 pointer-events-auto relative">
+                {/* Container Title & Subtitle */}
+                <div className="space-y-3 relative z-30">
+                  {/* Title Besar, Tebal, dan Megah di Depan Layar */}
+                  <h2 className="project-title font-syne font-extrabold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-white leading-[0.95] select-none drop-shadow-[0_15px_35px_rgba(0,0,0,0.9)] max-w-2xl lg:max-w-3xl">
+                    {project.title}
+                  </h2>
+
+                  {/* Subtitle Ringkas (2-3 kata) di bawah Title */}
+                  <p className="project-subtitle text-slate-300 font-outfit text-lg sm:text-xl lg:text-2xl font-medium tracking-wide drop-shadow-md select-none">
+                    {project.subtitle}
+                  </p>
+                </div>
 
                 {/* Tombol Explore */}
-                <div className="explore-button flex items-center space-x-4 pt-2 relative z-30">
-                  <button
-                    type="button"
-                    className="inline-flex items-center space-x-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-white text-slate-950 font-syne font-extrabold text-sm sm:text-base tracking-tight hover:bg-slate-200 transition-all shadow-2xl shadow-white/20 active:scale-95 cursor-pointer group"
+                <div className="explore-button flex items-center space-x-4 pt-1 relative z-30">
+                  <a
+                    href={project.exploreUrl || '#'}
+                    target={project.exploreUrl ? '_blank' : undefined}
+                    rel={project.exploreUrl ? 'noopener noreferrer' : undefined}
+                    className="inline-flex items-center space-x-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-white text-slate-950 font-syne font-extrabold text-sm sm:text-base tracking-tight hover:bg-slate-200 transition-all shadow-2xl shadow-white/20 active:scale-95 cursor-pointer group no-underline"
                   >
                     <span>Explore</span>
                     <ArrowRight className="w-4 h-4 stroke-[2.8] group-hover:translate-x-1 transition-transform" />
-                  </button>
+                  </a>
                 </div>
               </div>
 

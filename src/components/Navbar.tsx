@@ -12,15 +12,14 @@ export default function Navbar() {
         </div>
 
         {/* Right Menu Items - Samping Paling Kanan */}
-        <div className="flex items-center space-x-3 sm:space-x-5 text-xs sm:text-sm font-semibold">
-          {/* Lonceng Icon (Notification) */}
+        <div className="flex items-center space-x-4 sm:space-x-6 md:space-x-7 text-xs sm:text-sm font-semibold">
+          {/* Lonceng Icon (Notification - Tanpa Titik Biru) */}
           <button
             type="button"
-            className="p-2 rounded-full hover:bg-white/10 text-slate-200 hover:text-white transition-all cursor-pointer relative group"
+            className="p-2 rounded-full hover:bg-white/10 text-slate-200 hover:text-white transition-all cursor-pointer group"
             title="Notifications"
           >
             <Bell className="w-4.5 h-4.5 stroke-[2] group-hover:scale-110 transition-transform" />
-            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 ring-2 ring-[#07080d]" />
           </button>
 
           {/* About Link */}
@@ -40,10 +39,10 @@ export default function Navbar() {
             <Music className="w-4.5 h-4.5 stroke-[2] group-hover:scale-110 transition-transform text-cyan-400" />
           </button>
 
-          {/* Have a project? Button (Transparan dengan Garis Tepi Putih) */}
+          {/* Have a project? Button (Diberi Jarak Ekstra & Transparan dengan Garis Tepi Putih) */}
           <button
             type="button"
-            className="inline-flex items-center space-x-1.5 px-4 sm:px-4.5 py-2 sm:py-2.5 rounded-full bg-transparent text-white border border-white/60 hover:border-white hover:bg-white/10 font-syne font-bold text-xs sm:text-[13px] tracking-tight transition-all shadow-sm hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] active:scale-95 cursor-pointer group"
+            className="ml-2 sm:ml-3 inline-flex items-center space-x-1.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-transparent text-white border border-white/60 hover:border-white hover:bg-white/10 font-syne font-bold text-xs sm:text-[13px] tracking-tight transition-all shadow-sm hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] active:scale-95 cursor-pointer group"
           >
             <span>Have a project?</span>
             <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
