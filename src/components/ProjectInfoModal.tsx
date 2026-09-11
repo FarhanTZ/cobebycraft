@@ -17,6 +17,7 @@ import {
   Code2,
   Radio,
 } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 export interface ProjectDetail {
   id: string
@@ -81,7 +82,7 @@ function TechCircleBadge({ tag, brandColor }: { tag: string; brandColor: string 
     }
     if (normalized.includes('webgl')) {
       return (
-        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#ef4444] group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#ef4444] group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
           <polyline points="3.29 7 12 12 20.71 7" />
           <line x1="12" y1="22" x2="12" y2="12" />
@@ -90,7 +91,7 @@ function TechCircleBadge({ tag, brandColor }: { tag: string; brandColor: string 
     }
     if (normalized.includes('shader') || normalized.includes('pbr')) {
       return (
-        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#f59e0b] group-hover:rotate-12 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#f59e0b] group-hover:rotate-12 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
           <polygon points="6 3 18 3 22 9 12 22 2 9" />
           <line x1="2" y1="9" x2="22" y2="9" />
           <line x1="12" y1="22" x2="6" y2="9" />
@@ -149,6 +150,7 @@ function TechCircleBadge({ tag, brandColor }: { tag: string; brandColor: string 
 }
 
 export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalProps) {
+  const { t } = useLanguage()
   const [activeProject, setActiveProject] = useState<ProjectDetail | null>(project)
   const [isPlaying, setIsPlaying] = useState(true)
   const [isMuted, setIsMuted] = useState(true)
@@ -300,6 +302,9 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
   if (!activeProject) return null
 
   const displayProject = activeProject
+  const localizedInfo = t.projects[displayProject.id]
+  const currentSubtitle = localizedInfo?.subtitle || displayProject.subtitle
+  const currentDescription = localizedInfo?.description || displayProject.description
 
   return (
     <div
@@ -361,14 +366,14 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
 
                 {/* Subtitle Ringkas */}
                 <p className="text-slate-300 font-outfit text-xl sm:text-2xl font-medium tracking-wide pt-1">
-                  {displayProject.subtitle}
+                  {currentSubtitle}
                 </p>
               </div>
 
               {/* Deskripsi Teks Proyek (Bersih & Elegan) */}
               <div className="space-y-2 pt-1">
                 <p className="text-slate-300 text-base sm:text-lg lg:text-xl leading-relaxed font-normal">
-                  {displayProject.description}
+                  {currentDescription}
                 </p>
               </div>
 
@@ -381,7 +386,7 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
                     rel="noopener noreferrer"
                     className="inline-flex items-center space-x-3 px-8 py-4 rounded-2xl bg-white text-slate-950 font-syne font-extrabold text-sm sm:text-base tracking-tight hover:bg-slate-200 transition-all shadow-2xl shadow-white/25 active:scale-95 cursor-pointer group no-underline"
                   >
-                    <span>Explore Live Project</span>
+                    <span>{t.projectModal.exploreLive}</span>
                     <ExternalLink className="w-4.5 h-4.5 stroke-[2.8] group-hover:translate-x-1 transition-transform" />
                   </a>
                 </div>
@@ -420,7 +425,7 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
                       type="button"
                       onClick={togglePlay}
                       className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all active:scale-90 cursor-pointer"
-                      title={isPlaying ? 'Pause' : 'Play'}
+                      title={isPlaying ? t.projectModal.pause : t.projectModal.play}
                     >
                       {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
                     </button>
@@ -429,7 +434,7 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
                       type="button"
                       onClick={toggleMute}
                       className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all active:scale-90 cursor-pointer"
-                      title={isMuted ? 'Unmute' : 'Mute'}
+                      title={isMuted ? t.projectModal.unmute : t.projectModal.mute}
                     >
                       {isMuted ? <VolumeX className="w-4 h-4 text-slate-400" /> : <Volume2 className="w-4 h-4 text-cyan-400" />}
                     </button>
@@ -443,7 +448,7 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
                     className="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold tracking-wider text-white bg-black/60 border border-white/10"
                     style={{ color: displayProject.color }}
                   >
-                    LIVE PREVIEW
+                    {t.projectModal.livePreview}
                   </span>
                 </div>
               </div>
@@ -455,7 +460,7 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
             <div className="mt-10 sm:mt-14 pt-7 sm:pt-8 border-t border-white/[0.08] flex flex-col items-center justify-center space-y-4">
               <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono text-slate-300">
                 <Code2 className="w-3.5 h-3.5" style={{ color: displayProject.color }} />
-                <span className="uppercase tracking-wider font-semibold text-[11px]">Technologies Used</span>
+                <span className="uppercase tracking-wider font-semibold text-[11px]">{t.projectModal.technologiesUsed}</span>
               </div>
 
               {/* Barisan Icon Bundar-Bundar */}
@@ -473,7 +478,7 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
 
           {/* 4. SUBTLE FOOTER (DENGAN JARAK PAS) */}
           <footer className="mt-8 sm:mt-10 pt-2 pb-4 text-center text-xs font-mono text-slate-500">
-            Press <span className="text-slate-300">ESC</span> or click <span className="text-slate-300">✕</span> to return
+            {t.projectModal.footerEsc}
           </footer>
         </main>
       </div>

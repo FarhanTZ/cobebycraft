@@ -12,6 +12,7 @@ import {
   Gamepad2,
   Cpu,
 } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 interface AboutModalProps {
   isOpen: boolean
@@ -161,6 +162,7 @@ function TechCircleBadge({ tag, brandColor }: { tag: string; brandColor: string 
 }
 
 export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
+  const { t } = useLanguage()
   const backdropRef = useRef<HTMLDivElement | null>(null)
   const modalRef = useRef<HTMLDivElement | null>(null)
   const heroRef = useRef<HTMLDivElement | null>(null)
@@ -332,34 +334,37 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
           {/* A. TITLE: ABOUT */}
           <div ref={heroRef} className="space-y-3 max-w-6xl w-full text-left">
             <h1 className="font-syne font-extrabold text-6xl sm:text-8xl md:text-9xl text-white tracking-tight leading-[0.92] drop-shadow-2xl">
-              About
+              {t.aboutModal.title}
             </h1>
           </div>
 
           {/* B. ABOUT PENJELASAN (EXTRA LARGE & SUPER BOLD/CLEAR) */}
           <div ref={descRef} className="mt-10 sm:mt-14 max-w-6xl w-full space-y-8 sm:space-y-10 text-left">
             <p className="text-slate-100 text-xl sm:text-2xl md:text-3xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
-              <strong className="text-white font-semibold">CodeByCraft</strong> lahir dari sebuah keyakinan bahwa rekayasa perangkat lunak bukan sekadar pekerjaan merangkai logika komputer, melainkan sebuah seni kriya (<em className="text-cyan-300 not-italic font-medium">craftsmanship</em>) yang menuntut presisi, efisiensi, dan kepekaan estetika tinggi. Berdiri di titik temu antara arsitektur sistem yang kokoh dan desain visual interaktif, CodeByCraft berfokus menghadirkan produk digital yang tidak hanya berfungsi secara teknis, tetapi juga memberikan pengalaman penggunaan yang mulus dan berkarakter. Setiap proyek didekati dengan standar disiplin ketat, menolak solusi instan yang rapuh demi menjaga skalabilitas jangka panjang, stabilitas performa, serta keterbacaan kode yang bersih.
+              <strong className="text-white font-semibold">{t.aboutModal.manifestoP1Strong}</strong>{t.aboutModal.manifestoP1Text1}<em className="text-cyan-300 not-italic font-medium">{t.aboutModal.manifestoP1Craft}</em>{t.aboutModal.manifestoP1Text2}
             </p>
 
             <p className="text-slate-200 text-xl sm:text-2xl md:text-3xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
-              Eksplorasi CodeByCraft membentang di berbagai domain teknologi modern, mulai dari rancang bangun antarmuka web 3D yang dinamis menggunakan ekosistem <span className="text-cyan-400 font-medium">React Three Fiber</span> dan <span className="text-rose-400 font-medium">WebGL</span>, pengembangan aplikasi multiplatform berbasis <span className="text-sky-400 font-medium">Flutter</span> dengan Clean Architecture yang terukur, hingga fondasi sistem backend yang tangguh menggunakan <span className="text-cyan-300 font-medium">Go</span>, <span className="text-red-400 font-medium">Laravel</span>, dan <span className="text-amber-300 font-medium">Python</span>. Lebih dari sekadar membangun fungsionalitas konvensional, CodeByCraft terus mendorong batas eksplorasi kreatif melalui eksperimen visi komputer, integrasi kecerdasan buatan, hingga rekayasa logika interaktif pada platform sandbox. Pada akhirnya, CodeByCraft adalah manifestasi dari dedikasi terhadap kode yang elegan, sistem yang andal, dan karya digital yang dirancang dengan integritas penuh dari baris pertama hingga tahap penyempurnaan akhir.
+              {t.aboutModal.manifestoP2Text1}
+            </p>
+            <p className="text-slate-200 text-xl sm:text-2xl md:text-3xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
+              {t.aboutModal.manifestoP2Text2}
             </p>
           </div>
 
           {/* C. WORK HISTORY */}
           <div className="mt-14 sm:mt-20 pt-10 border-t border-white/[0.08] max-w-6xl w-full space-y-8 text-left">
             <h2 className="font-syne font-extrabold text-4xl sm:text-5xl md:text-6xl text-white tracking-tight leading-[0.98]">
-              Work History
+              {t.aboutModal.workHistoryTitle}
             </h2>
 
             <div className="space-y-6 sm:space-y-8">
               <p className="text-slate-100 text-xl sm:text-2xl md:text-3xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
-                Saya menandai awal resmi perjalanan ini dengan mendirikan <strong className="text-white font-semibold">CodeByCraft</strong> pada <span className="text-cyan-300 font-medium">September 2026</span>. Berawal dari dorongan kuat untuk menjembatani arsitektur sistem yang kokoh dengan pengalaman visual interaktif, inisiatif ini langsung menetapkan visi utamanya: menghadirkan produk digital kelas atas di mana presisi rekayasa bertemu dengan desain yang hidup dan terarah.
+                {t.aboutModal.workHistoryP1Text1}<strong className="text-white font-semibold">{t.aboutModal.workHistoryP1Strong}</strong> {t.aboutModal.workHistoryP1Text2}
               </p>
 
               <p className="text-slate-200 text-xl sm:text-2xl md:text-3xl lg:text-[28px] font-light leading-[1.6] sm:leading-[1.65] md:leading-[1.7] tracking-normal">
-                Sejak hari pertama, fokus saya tertuju pada menciptakan pengalaman digital yang mulus dan tahan uji, menolak jalan pintas demi menjaga skalabilitas jangka panjang dan stabilitas performa tanpa kompromi. Saat ini, saya memimpin CodeByCraft sebagai inisiatif mandiri, secara aktif merancang pengalaman web interaktif yang imersif, produk multiplatform yang modular, serta fondasi sistem andal yang dirancang untuk tumbuh secara presisi.
+                {t.aboutModal.workHistoryP2}
               </p>
             </div>
           </div>
@@ -368,7 +373,7 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
           <div ref={toolsRef} className="w-full mt-16 sm:mt-20 pt-10 border-t border-white/[0.08] flex flex-col items-start justify-start space-y-6">
             <div className="inline-flex items-center space-x-2.5 px-4 py-2 rounded-full bg-white/[0.04] border border-white/10 text-xs sm:text-sm font-mono text-slate-300">
               <Code2 className="w-4 h-4 text-cyan-400" />
-              <span className="uppercase tracking-wider font-semibold text-xs sm:text-[13px]">Core Technologies & Domains</span>
+              <span className="uppercase tracking-wider font-semibold text-xs sm:text-[13px]">{t.aboutModal.coreTechTitle}</span>
             </div>
 
             {/* Barisan Icon Bundar-Bundar Rata Kiri */}
@@ -385,7 +390,7 @@ export default function AboutModal({ isOpen, onClose }: AboutModalProps) {
 
           {/* E. SUBTLE FOOTER RETURN NOTE */}
           <footer className="mt-14 pt-2 text-left text-xs font-mono text-slate-500">
-            Press <span className="text-slate-300">ESC</span> or click <span className="text-slate-300">✕</span> to return
+            {t.aboutModal.footerEsc}
           </footer>
         </main>
       </div>

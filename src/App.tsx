@@ -7,6 +7,7 @@ import Navbar from './components/Navbar'
 import VideoScreen3D from './components/VideoScreen3D'
 import CustomCursor from './components/CustomCursor'
 import IntroScreen from './components/IntroScreen'
+import { useLanguage } from './context/LanguageContext'
 import type { ProjectDetail } from './components/ProjectInfoModal'
 
 const ProjectInfoModal = lazy(() => import('./components/ProjectInfoModal'))
@@ -132,6 +133,7 @@ const PROJECTS: ProjectDetail[] = [
 ]
 
 export default function App() {
+  const { t } = useLanguage()
   const [isIntroComplete, setIsIntroComplete] = useState(false)
   const [activeProjectIndex, setActiveProjectIndex] = useState(0)
   const [selectedInfoProject, setSelectedInfoProject] = useState<ProjectDetail | null>(null)
@@ -415,11 +417,11 @@ export default function App() {
         <div className="w-full max-w-[1850px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center h-full">
           <div className="lg:col-span-5 hidden lg:block" />
           
-          <div className="lg:col-span-7 flex items-center justify-end relative perspective-[1800px] lg:-ml-20 -mr-2 sm:-mr-4 lg:mr-0 pointer-events-auto">
-            {/* Tilted Video Screen (Optimized Balanced Size) */}
+          <div className="lg:col-span-7 flex items-center justify-end relative perspective-[1800px] lg:-ml-28 -mr-3 sm:-mr-6 lg:mr-0 pointer-events-auto">
+            {/* Tilted Video Screen (Slightly Enlarged Balanced Size) */}
             <div
               ref={screenWrapperRef}
-              className="relative w-full aspect-[16/10] min-h-[380px] sm:min-h-[480px] lg:min-h-[540px] xl:min-h-[620px] max-w-[980px] xl:max-w-[1100px] rounded-3xl will-change-transform pointer-events-auto"
+              className="relative w-full aspect-[16/10] min-h-[420px] sm:min-h-[520px] lg:min-h-[580px] xl:min-h-[660px] max-w-[1050px] xl:max-w-[1180px] rounded-3xl will-change-transform pointer-events-auto"
               style={{
                 transformStyle: 'preserve-3d',
               }}
@@ -567,60 +569,64 @@ export default function App() {
 
       {/* SEAMLESS SCROLLABLE SECTIONS (Layer Depan - Title Tampil di Atas Layar Video) */}
       <div className="relative z-30 w-full max-w-[1850px] mx-auto px-6 sm:px-10 md:px-14 pointer-events-none">
-        {PROJECTS.map((project, index) => (
-          <section
-            key={project.id}
-            ref={(el) => {
-              sectionsRef.current[index] = el
-            }}
-            className="min-h-screen flex items-center relative py-28 pointer-events-none"
-          >
-            <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-              {/* KOLOM KIRI: Title Gede, Subtitle & Tombol Explore (Berada di Layer Depan) */}
-              <div className="lg:col-span-6 xl:col-span-6 flex flex-col justify-center space-y-6 sm:space-y-8 z-30 pointer-events-auto relative">
-                {/* Container Title & Subtitle */}
-                <div className="space-y-3 relative z-30">
-                  {/* Title Besar, Tebal, dan Megah di Depan Layar */}
-                  <h2 className="project-title font-syne font-extrabold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-white leading-[0.95] select-none drop-shadow-[0_15px_35px_rgba(0,0,0,0.9)] max-w-2xl lg:max-w-3xl">
-                    {project.title}
-                  </h2>
+        {PROJECTS.map((project, index) => {
+          const projectSubtitle = t.projects[project.id]?.subtitle || project.subtitle
 
-                  {/* Subtitle Ringkas (2-3 kata) di bawah Title */}
-                  <p className="project-subtitle text-slate-300 font-outfit text-lg sm:text-xl lg:text-2xl font-medium tracking-wide drop-shadow-md select-none">
-                    {project.subtitle}
-                  </p>
+          return (
+            <section
+              key={project.id}
+              ref={(el) => {
+                sectionsRef.current[index] = el
+              }}
+              className="min-h-screen flex items-center relative py-28 pointer-events-none"
+            >
+              <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+                {/* KOLOM KIRI: Title Gede, Subtitle & Tombol Explore (Berada di Layer Depan) */}
+                <div className="lg:col-span-6 xl:col-span-6 flex flex-col justify-center space-y-6 sm:space-y-8 z-30 pointer-events-auto relative">
+                  {/* Container Title & Subtitle */}
+                  <div className="space-y-3 relative z-30">
+                    {/* Title Besar, Tebal, dan Megah di Depan Layar */}
+                    <h2 className="project-title font-syne font-extrabold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-white leading-[0.95] select-none drop-shadow-[0_15px_35px_rgba(0,0,0,0.9)] max-w-2xl lg:max-w-3xl">
+                      {project.title}
+                    </h2>
+
+                    {/* Subtitle Ringkas (2-3 kata) di bawah Title */}
+                    <p className="project-subtitle text-slate-300 font-outfit text-lg sm:text-xl lg:text-2xl font-medium tracking-wide drop-shadow-md select-none">
+                      {projectSubtitle}
+                    </p>
+                  </div>
+
+                  {/* Tombol Explore & Info */}
+                  <div className="explore-button flex items-center space-x-3 sm:space-x-4 pt-1 relative z-30">
+                    {/* Tombol Explore */}
+                    <a
+                      href={project.exploreUrl || '#'}
+                      target={project.exploreUrl ? '_blank' : undefined}
+                      rel={project.exploreUrl ? 'noopener noreferrer' : undefined}
+                      className="inline-flex items-center space-x-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-white text-slate-950 font-syne font-extrabold text-sm sm:text-base tracking-tight hover:bg-slate-200 transition-all shadow-2xl shadow-white/20 active:scale-95 cursor-pointer group no-underline"
+                    >
+                      <span>{t.hero.explore}</span>
+                      <ArrowRight className="w-4 h-4 stroke-[2.8] group-hover:translate-x-1 transition-transform" />
+                    </a>
+
+                    {/* Tombol Info Project */}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedInfoProject(project)}
+                      className="inline-flex items-center space-x-2 px-5 sm:px-7 py-3.5 sm:py-4 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-syne font-bold text-sm sm:text-base tracking-tight border border-white/20 hover:border-white/40 transition-all backdrop-blur-md shadow-lg shadow-black/40 active:scale-95 cursor-pointer group"
+                    >
+                      <Info className="w-4.5 h-4.5 stroke-[2.5] text-cyan-400 group-hover:rotate-12 transition-transform" />
+                      <span>{t.hero.info}</span>
+                    </button>
+                  </div>
                 </div>
 
-                {/* Tombol Explore & Info */}
-                <div className="explore-button flex items-center space-x-3 sm:space-x-4 pt-1 relative z-30">
-                  {/* Tombol Explore */}
-                  <a
-                    href={project.exploreUrl || '#'}
-                    target={project.exploreUrl ? '_blank' : undefined}
-                    rel={project.exploreUrl ? 'noopener noreferrer' : undefined}
-                    className="inline-flex items-center space-x-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-white text-slate-950 font-syne font-extrabold text-sm sm:text-base tracking-tight hover:bg-slate-200 transition-all shadow-2xl shadow-white/20 active:scale-95 cursor-pointer group no-underline"
-                  >
-                    <span>Explore</span>
-                    <ArrowRight className="w-4 h-4 stroke-[2.8] group-hover:translate-x-1 transition-transform" />
-                  </a>
-
-                  {/* Tombol Info Project */}
-                  <button
-                    type="button"
-                    onClick={() => setSelectedInfoProject(project)}
-                    className="inline-flex items-center space-x-2 px-5 sm:px-7 py-3.5 sm:py-4 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-syne font-bold text-sm sm:text-base tracking-tight border border-white/20 hover:border-white/40 transition-all backdrop-blur-md shadow-lg shadow-black/40 active:scale-95 cursor-pointer group"
-                  >
-                    <Info className="w-4.5 h-4.5 stroke-[2.5] text-cyan-400 group-hover:rotate-12 transition-transform" />
-                    <span>Info</span>
-                  </button>
-                </div>
+                {/* Empty placeholder on the right for spatial alignment with fixed 3D screen */}
+                <div className="lg:col-span-6 hidden lg:block pointer-events-none" />
               </div>
-
-              {/* Empty placeholder on the right for spatial alignment with fixed 3D screen */}
-              <div className="lg:col-span-6 hidden lg:block pointer-events-none" />
-            </div>
-          </section>
-        ))}
+            </section>
+          )
+        })}
       </div>
 
       {/* 6. Interactive Project Detail Info Modal (Lazy Loaded) */}

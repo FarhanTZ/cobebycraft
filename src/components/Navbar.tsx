@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
 import { Bell, Music, ArrowUpRight } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 interface NavbarProps {
   onOpenAbout?: () => void
 }
 
 export default function Navbar({ onOpenAbout }: NavbarProps) {
+  const { language, toggleLanguage, t } = useLanguage()
   const [isPlayingMusic, setIsPlayingMusic] = useState(false)
   const audioCtxRef = useRef<AudioContext | null>(null)
   const audioBufferRef = useRef<AudioBuffer | null>(null)
@@ -126,14 +128,26 @@ export default function Navbar({ onOpenAbout }: NavbarProps) {
         </div>
 
         {/* Right Menu Items - Samping Paling Kanan */}
-        <div className="flex items-center space-x-4 sm:space-x-6 md:space-x-7 text-xs sm:text-sm font-semibold">
+        <div className="flex items-center space-x-3 sm:space-x-5 md:space-x-6 text-xs sm:text-sm font-semibold">
           {/* Lonceng Icon (Notification - Tanpa Titik Biru) */}
           <button
             type="button"
             className="p-2 rounded-full hover:bg-white/10 text-slate-200 hover:text-white transition-all cursor-pointer group"
-            title="Notifications"
+            title={t.nav.notifications}
           >
             <Bell className="w-4.5 h-4.5 stroke-[2] group-hover:scale-110 transition-transform" />
+          </button>
+
+          {/* Language Switcher Pill (ID | EN) */}
+          <button
+            type="button"
+            onClick={toggleLanguage}
+            className="flex items-center space-x-1 px-2.5 py-1 rounded-full bg-white/[0.06] hover:bg-white/15 border border-white/15 text-[11px] sm:text-xs font-mono font-bold tracking-wider transition-all cursor-pointer active:scale-95 text-slate-300 hover:text-white shadow-sm"
+            title={language === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia'}
+          >
+            <span className={language === 'id' ? 'text-cyan-400 font-black' : 'text-slate-400 opacity-60'}>ID</span>
+            <span className="text-slate-600 text-[10px]">/</span>
+            <span className={language === 'en' ? 'text-cyan-400 font-black' : 'text-slate-400 opacity-60'}>EN</span>
           </button>
 
           {/* About Link */}
@@ -142,7 +156,7 @@ export default function Navbar({ onOpenAbout }: NavbarProps) {
             onClick={onOpenAbout}
             className="text-slate-200 hover:text-white px-2.5 py-1 rounded-lg hover:bg-white/10 transition-all text-xs sm:text-[13px] font-semibold tracking-normal cursor-pointer active:scale-95"
           >
-            About
+            {t.nav.about}
           </button>
 
           {/* Music Interactive BGM Toggle */}
@@ -154,7 +168,7 @@ export default function Navbar({ onOpenAbout }: NavbarProps) {
                 ? 'bg-cyan-500/20 text-cyan-300 ring-1 ring-cyan-400/50 shadow-[0_0_16px_rgba(56,189,248,0.4)]'
                 : 'hover:bg-white/10 text-slate-200 hover:text-white'
             }`}
-            title={isPlayingMusic ? 'Pause Background Music' : 'Play Background Music (Royalty-Free Lofi)'}
+            title={isPlayingMusic ? t.nav.pauseMusic : t.nav.playMusic}
           >
             {isPlayingMusic ? (
               <div className="flex items-end space-x-0.5 h-4 w-4.5 justify-center py-0.5">
@@ -171,9 +185,9 @@ export default function Navbar({ onOpenAbout }: NavbarProps) {
           {/* Have a project? Button (Diberi Jarak Ekstra & Transparan dengan Garis Tepi Putih) */}
           <button
             type="button"
-            className="ml-2 sm:ml-3 inline-flex items-center space-x-1.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-transparent text-white border border-white/60 hover:border-white hover:bg-white/10 font-syne font-bold text-xs sm:text-[13px] tracking-tight transition-all shadow-sm hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] active:scale-95 cursor-pointer group"
+            className="ml-1 sm:ml-2 inline-flex items-center space-x-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-transparent text-white border border-white/60 hover:border-white hover:bg-white/10 font-syne font-bold text-xs sm:text-[13px] tracking-tight transition-all shadow-sm hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] active:scale-95 cursor-pointer group"
           >
-            <span>Have a project?</span>
+            <span>{t.nav.haveProject}</span>
             <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </button>
         </div>
