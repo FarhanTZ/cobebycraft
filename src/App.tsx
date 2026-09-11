@@ -6,6 +6,7 @@ import { ArrowRight } from 'lucide-react'
 import Navbar from './components/Navbar'
 import VideoScreen3D from './components/VideoScreen3D'
 import CustomCursor from './components/CustomCursor'
+import IntroScreen from './components/IntroScreen'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
@@ -89,6 +90,7 @@ const PROJECTS: Project[] = [
 ]
 
 export default function App() {
+  const [isIntroComplete, setIsIntroComplete] = useState(false)
   const [activeProjectIndex, setActiveProjectIndex] = useState(0)
   const [isScrolling, setIsScrolling] = useState(false)
   const scrollTimeoutRef = useRef<number | null>(null)
@@ -274,6 +276,11 @@ export default function App() {
       ref={containerRef}
       className="relative bg-[#06070c] text-slate-100 selection:bg-cyan-500/30 font-outfit"
     >
+      {/* 0. Cinematic Opening Splash Intro with codebycraft.WAV sound */}
+      {!isIntroComplete && (
+        <IntroScreen onComplete={() => setIsIntroComplete(true)} />
+      )}
+
       {/* 1. Dynamic Full Viewport Atmospheric Color Gradient */}
       <div
         className="fixed inset-0 pointer-events-none transition-all duration-1000 ease-out z-0"
