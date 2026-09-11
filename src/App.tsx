@@ -2,29 +2,16 @@ import { useState, useRef, useEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Info } from 'lucide-react'
 import Navbar from './components/Navbar'
 import VideoScreen3D from './components/VideoScreen3D'
 import CustomCursor from './components/CustomCursor'
 import IntroScreen from './components/IntroScreen'
+import ProjectInfoModal, { type ProjectDetail } from './components/ProjectInfoModal'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
-interface Project {
-  id: string
-  number: string
-  title: string
-  subtitle: string
-  client: string
-  metric: string
-  year: string
-  color: string
-  secondaryColor: string
-  videoUrl: string
-  exploreUrl?: string
-}
-
-const PROJECTS: Project[] = [
+const PROJECTS: ProjectDetail[] = [
   {
     id: 'grab-interactive',
     number: '01',
@@ -37,6 +24,16 @@ const PROJECTS: Project[] = [
     secondaryColor: '#38bdf8',
     videoUrl: '/video/grab_video.mp4',
     exploreUrl: 'https://grab-interactive-landing.vercel.app/',
+    role: 'Creative Development & 3D Web Experience',
+    description:
+      'Eksplorasi landing page interaktif generasi baru untuk ekosistem Grab. Menghadirkan visualisasi 3D real-time yang dinamis untuk layanan transportasi, pesan-antar makanan, dan pembayaran digital dengan interaksi mikro yang responsif dan performa tinggi.',
+    highlights: [
+      'Visualisasi armada 3D interaktif real-time',
+      'Micro-interactions & simulasi fisika spasial',
+      'Optimasi rendering 60FPS fluid di semua layar',
+      'Integrasi seamless ekosistem multi-layanan SuperApp',
+    ],
+    tags: ['React', 'TypeScript', 'Three.js', 'GSAP Motion', 'Tailwind CSS', 'WebGL Shaders'],
   },
   {
     id: 'pixar-characters',
@@ -50,6 +47,16 @@ const PROJECTS: Project[] = [
     secondaryColor: '#f59e0b',
     videoUrl: '/video/pixar_video.mp4',
     exploreUrl: 'https://pixar-character.vercel.app/',
+    role: '3D Web Developer & Technical Artist',
+    description:
+      'Pengalaman web interaktif 3D imersif yang menampilkan karakter animasi legendaris Pixar. Memanfaatkan rendering PBR (Physically Based Rendering), pencahayaan studio dinamis, dan kontrol kamera orbit bebas untuk menghidupkan animasi di browser.',
+    highlights: [
+      'Rendering material PBR fotorealistik',
+      'Kontrol orbit & zoom kamera 360 derajat',
+      'Pencahayaan studio dinamis & ambient occlusion',
+      'Asset streaming terkompresi dengan performa instan',
+    ],
+    tags: ['Three.js', 'React Three Fiber', 'GLTF/GLB PBR', 'Custom Shaders', 'Vite', 'GSAP'],
   },
   {
     id: 'executive-portfolio',
@@ -63,6 +70,16 @@ const PROJECTS: Project[] = [
     secondaryColor: '#ec4899',
     videoUrl: '/video/Portofolio_Video.mp4',
     exploreUrl: 'https://farhantz-five.vercel.app/',
+    role: 'Fullstack UI/UX & Lead Frontend Engineer',
+    description:
+      'Showcase portofolio berstandar eksekutif dengan struktur Bento Grid modular yang modern. Menggabungkan tipografi kuat, animasi transisi sinematik, serta showcase proyek rekayasa perangkat lunak dan desain interaktif tingkat lanjut.',
+    highlights: [
+      'Arsitektur layout Bento Grid adaptif dan modular',
+      'Estetika Velvet Dark Glassmorphism',
+      'Integrasi live demo interaktif tanpa reload',
+      'Skor Lighthouse performa & aksesibilitas 98+',
+    ],
+    tags: ['React', 'TypeScript', 'Bento Grid System', 'Framer Motion', 'Tailwind CSS', 'Vercel'],
   },
   {
     id: 'gameboy-design',
@@ -76,6 +93,16 @@ const PROJECTS: Project[] = [
     secondaryColor: '#ef4444',
     videoUrl: '/video/Gameboy_video.mp4',
     exploreUrl: 'https://portofolio-farhan-triputra-ramadhan.vercel.app/',
+    role: 'Creative Developer & Sound Synthesist',
+    description:
+      'Eksplorasi retro gaming interaktif penghormatan bagi konsol Gameboy. Dilengkapi shader scanline layar CRT, simulator letupan efek audio sintetis 8-bit prosedural Web Audio API, dan tombol kontrol konsol fisik yang dapat dioperasikan langsung.',
+    highlights: [
+      'Generator efek suara retro 8-bit prosedural Web Audio API',
+      'Shader filter visual garis pindai CRT autentik',
+      'D-Pad & tombol kontrol fisik interaktif responsif',
+      'Estetika pixel art nostalgia dengan sentuhan modern',
+    ],
+    tags: ['Retro Pixel Art', 'Web Audio API Synth', 'CRT Shaders', 'React', 'Canvas API'],
   },
   {
     id: 'veloce-motors',
@@ -88,12 +115,23 @@ const PROJECTS: Project[] = [
     color: '#f43f5e',
     secondaryColor: '#fb923c',
     videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-abstract-laser-lights-background-animation-41538-large.mp4',
+    role: '3D Web Graphics Engineer',
+    description:
+      'Aplikasi konfigurator kendaraan digital 3D berstandar otomotif mewah. Memungkinkan pengguna mengganti warna cat mobil berpartikel metalik, desain velg alloy, material interior serat karbon, dan pencahayaan studio secara real-time.',
+    highlights: [
+      'Simulasi pantulan cat mobil metalik multi-layer',
+      'Tampilan 360 derajat interaktif beresolusi tinggi',
+      'Latensi penggantian material instan tanpa jeda',
+      'Shader refleksi kaca dan interior fotorealistik',
+    ],
+    tags: ['WebGL', 'PBR Material Shaders', 'Three.js', 'High-Poly Optimization', 'React'],
   },
 ]
 
 export default function App() {
   const [isIntroComplete, setIsIntroComplete] = useState(false)
   const [activeProjectIndex, setActiveProjectIndex] = useState(0)
+  const [selectedInfoProject, setSelectedInfoProject] = useState<ProjectDetail | null>(null)
   const [hoveredProjectIndex, setHoveredProjectIndex] = useState<number | null>(null)
   const [isHoveringIndicators, setIsHoveringIndicators] = useState(false)
   const [isNearRightEdge, setIsNearRightEdge] = useState(false)
@@ -338,7 +376,7 @@ export default function App() {
         <CustomCursor
           color={currentProject.color}
           secondaryColor={currentProject.secondaryColor}
-          hidden={isHoveringIndicators || hoveredProjectIndex !== null}
+          hidden={isHoveringIndicators || hoveredProjectIndex !== null || selectedInfoProject !== null}
         />
       )}
 
@@ -523,8 +561,9 @@ export default function App() {
                   </p>
                 </div>
 
-                {/* Tombol Explore */}
-                <div className="explore-button flex items-center space-x-4 pt-1 relative z-30">
+                {/* Tombol Explore & Info */}
+                <div className="explore-button flex items-center space-x-3 sm:space-x-4 pt-1 relative z-30">
+                  {/* Tombol Explore */}
                   <a
                     href={project.exploreUrl || '#'}
                     target={project.exploreUrl ? '_blank' : undefined}
@@ -534,6 +573,16 @@ export default function App() {
                     <span>Explore</span>
                     <ArrowRight className="w-4 h-4 stroke-[2.8] group-hover:translate-x-1 transition-transform" />
                   </a>
+
+                  {/* Tombol Info Project */}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedInfoProject(project)}
+                    className="inline-flex items-center space-x-2 px-5 sm:px-7 py-3.5 sm:py-4 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-syne font-bold text-sm sm:text-base tracking-tight border border-white/20 hover:border-white/40 transition-all backdrop-blur-md shadow-lg shadow-black/40 active:scale-95 cursor-pointer group"
+                  >
+                    <Info className="w-4.5 h-4.5 stroke-[2.5] text-cyan-400 group-hover:rotate-12 transition-transform" />
+                    <span>Info</span>
+                  </button>
                 </div>
               </div>
 
@@ -543,6 +592,12 @@ export default function App() {
           </section>
         ))}
       </div>
+
+      {/* 6. Interactive Project Detail Info Modal */}
+      <ProjectInfoModal
+        project={selectedInfoProject}
+        onClose={() => setSelectedInfoProject(null)}
+      />
     </div>
   )
 }

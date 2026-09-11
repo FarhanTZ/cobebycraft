@@ -252,7 +252,7 @@ export default function CustomCursor({
 
   return (
     <div
-      className={`hidden md:block pointer-events-none fixed inset-0 z-[9999] overflow-hidden transition-opacity duration-200 ${
+      className={`hidden md:block pointer-events-none fixed inset-0 z-[9999999] overflow-hidden transition-opacity duration-200 ${
         hidden ? 'opacity-0' : 'opacity-100'
       }`}
     >

@@ -45,6 +45,23 @@
     video {
       cursor: pointer !important;
     }
+
+    /* Aktifkan kursor default Windows di dalam tampilan deskripsi proyek */
+    .project-detail-view,
+    .project-detail-view * {
+      cursor: default !important;
+    }
+
+    .project-detail-view button,
+    .project-detail-view button *,
+    .project-detail-view a,
+    .project-detail-view a *,
+    .project-detail-view [role="button"],
+    .project-detail-view [role="button"] *,
+    .project-detail-view .cursor-pointer,
+    .project-detail-view .cursor-pointer * {
+      cursor: pointer !important;
+    }
   }
 
   /* Sembunyikan scrollbar bawaan browser (Chrome, Safari, Edge, Opera) */
