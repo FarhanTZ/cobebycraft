@@ -403,56 +403,43 @@ export default function App() {
               key={proj.id}
               className="relative flex items-center justify-end"
             >
-              {/* MINI VIDEO PREVIEW CARD (Muncul di sebelah kiri saat kursor hover) */}
+              {/* MINI VIDEO PREVIEW (Langsung Kotak Video dengan Judul di Atasnya) */}
               <div
-                className={`absolute right-full mr-5 pointer-events-none transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1) flex items-center origin-right ${
+                className={`absolute right-full mr-5 pointer-events-none transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1) flex flex-col items-start origin-right gap-1.5 ${
                   isHovered
                     ? 'opacity-100 translate-x-0 scale-100'
                     : 'opacity-0 translate-x-4 scale-90 pointer-events-none'
                 }`}
               >
+                {/* Teks Nama Judul Project di Atas Video */}
+                <div className="flex items-center space-x-2 px-1 select-none">
+                  <span
+                    className="text-[11px] font-mono font-bold"
+                    style={{ color: proj.color }}
+                  >
+                    {proj.number}
+                  </span>
+                  <span className="text-[13px] font-bold font-syne text-white tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] truncate max-w-[200px]">
+                    {proj.title}
+                  </span>
+                </div>
+
+                {/* Kotak Video Langsung */}
                 <div
-                  className="w-52 sm:w-60 p-2.5 rounded-2xl bg-[#090b14]/90 backdrop-blur-2xl border border-white/20 shadow-2xl overflow-hidden flex flex-col gap-2"
+                  className="w-52 sm:w-60 aspect-[16/10] rounded-xl overflow-hidden bg-black/90 border shadow-2xl relative"
                   style={{
-                    boxShadow: `0 12px 35px -10px ${proj.color}55`,
-                    borderColor: `${proj.color}70`,
+                    boxShadow: `0 10px 30px -5px ${proj.color}55`,
+                    borderColor: `${proj.color}90`,
                   }}
                 >
-                  {/* Thumbnail Video Autoplay Mini */}
-                  <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-black/60 shadow-inner">
-                    <video
-                      src={proj.videoUrl}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-                    
-                    {/* Badge Nomor Project */}
-                    <span
-                      className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-white bg-black/70 backdrop-blur-md border border-white/10"
-                      style={{ color: proj.color }}
-                    >
-                      {proj.number}
-                    </span>
-
-                    {/* Badge Tahun Project */}
-                    <span className="absolute top-2 right-2 px-2 py-0.5 rounded-md text-[9px] font-mono text-slate-300 bg-black/60 backdrop-blur-md">
-                      {proj.year}
-                    </span>
-                  </div>
-
-                  {/* Info Ringkas Project */}
-                  <div className="px-1 py-0.5">
-                    <div className="text-[13px] font-bold font-syne text-white truncate tracking-tight">
-                      {proj.title}
-                    </div>
-                    <div className="text-[10px] text-slate-400 truncate font-outfit mt-0.5">
-                      {proj.subtitle}
-                    </div>
-                  </div>
+                  <video
+                    src={proj.videoUrl}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
 
