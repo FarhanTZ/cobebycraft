@@ -1,6 +1,36 @@
+import { useState, useRef, useEffect } from 'react'
 import { Bell, Music, ArrowUpRight } from 'lucide-react'
 
 export default function Navbar() {
+  const [isPlayingMusic, setIsPlayingMusic] = useState(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  useEffect(() => {
+    const audio = new Audio('/audio/ambient_bgm.mp3')
+    audio.loop = true
+    audio.volume = 0.35
+    audioRef.current = audio
+
+    return () => {
+      audio.pause()
+      audioRef.current = null
+    }
+  }, [])
+
+  const toggleMusic = () => {
+    if (!audioRef.current) return
+    if (isPlayingMusic) {
+      audioRef.current.pause()
+      setIsPlayingMusic(false)
+    } else {
+      audioRef.current.play().then(() => {
+        setIsPlayingMusic(true)
+      }).catch(() => {
+        // Autoplay policy fallback
+      })
+    }
+  }
+
   return (
     <header className="fixed top-2 sm:top-4 md:top-5 left-0 right-0 w-full z-50 bg-transparent transition-all">
       <div className="w-full flex items-center justify-between px-6 sm:px-10 md:px-14 py-4 sm:py-5">
@@ -30,13 +60,27 @@ export default function Navbar() {
             About
           </button>
 
-          {/* Music Icon */}
+          {/* Music Interactive BGM Toggle */}
           <button
             type="button"
-            className="p-2 rounded-full hover:bg-white/10 text-slate-200 hover:text-white transition-all cursor-pointer group"
-            title="Music"
+            onClick={toggleMusic}
+            className={`p-2 rounded-full transition-all cursor-pointer relative group flex items-center justify-center ${
+              isPlayingMusic
+                ? 'bg-cyan-500/20 text-cyan-300 ring-1 ring-cyan-400/50 shadow-[0_0_16px_rgba(56,189,248,0.4)]'
+                : 'hover:bg-white/10 text-slate-200 hover:text-white'
+            }`}
+            title={isPlayingMusic ? 'Pause Background Music' : 'Play Background Music (Royalty-Free Lofi)'}
           >
-            <Music className="w-4.5 h-4.5 stroke-[2] group-hover:scale-110 transition-transform text-cyan-400" />
+            {isPlayingMusic ? (
+              <div className="flex items-end space-x-0.5 h-4 w-4.5 justify-center py-0.5">
+                <span className="w-0.5 bg-cyan-400 rounded-full animate-[bounce_0.8s_ease-in-out_infinite] h-full" />
+                <span className="w-0.5 bg-cyan-300 rounded-full animate-[bounce_1.1s_ease-in-out_infinite] h-3/4" />
+                <span className="w-0.5 bg-cyan-400 rounded-full animate-[bounce_0.7s_ease-in-out_infinite] h-full" />
+                <span className="w-0.5 bg-cyan-300 rounded-full animate-[bounce_0.9s_ease-in-out_infinite] h-1/2" />
+              </div>
+            ) : (
+              <Music className="w-4.5 h-4.5 stroke-[2] group-hover:scale-110 transition-transform text-cyan-400" />
+            )}
           </button>
 
           {/* Have a project? Button (Diberi Jarak Ekstra & Transparan dengan Garis Tepi Putih) */}
