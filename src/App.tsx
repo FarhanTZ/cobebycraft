@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, lazy, Suspense } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
@@ -7,8 +7,10 @@ import Navbar from './components/Navbar'
 import VideoScreen3D from './components/VideoScreen3D'
 import CustomCursor from './components/CustomCursor'
 import IntroScreen from './components/IntroScreen'
-import ProjectInfoModal, { type ProjectDetail } from './components/ProjectInfoModal'
-import AboutModal from './components/AboutModal'
+import type { ProjectDetail } from './components/ProjectInfoModal'
+
+const ProjectInfoModal = lazy(() => import('./components/ProjectInfoModal'))
+const AboutModal = lazy(() => import('./components/AboutModal'))
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
@@ -189,7 +191,7 @@ export default function App() {
   // Ref untuk mengontrol pergerakan dinamis 3D layar saat kursor didekatkan
   const scrollProgressRef = useRef(0)
 
-  // Dynamic 3D screen tilt & proximity animation loop
+  // Dynamic 3D screen tilt & proximity animation loop (Optimized for 60-144 FPS)
   useEffect(() => {
     let animationFrameId: number
 
@@ -207,48 +209,72 @@ export default function App() {
     let currentTransZ = 0
     let currentScale = 1
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!screenWrapperRef.current) return
-      const rect = screenWrapperRef.current.getBoundingClientRect()
-      const centerX = rect.left + rect.width / 2
-      const centerY = rect.top + rect.height / 2
+    let mouseClientX = -9999
+    let mouseClientY = -9999
+    let cachedRect: DOMRect | null = null
+    let lastRectTime = 0
 
-      const deltaX = e.clientX - centerX
-      const deltaY = e.clientY - centerY
-      const distance = Math.hypot(deltaX, deltaY)
-
-      // Radius pengaruh saat kursor mendekat ke layar (1000px)
-      const proximityRadius = Math.max(rect.width, rect.height) * 1.1
-      const isInside =
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right &&
-        e.clientY >= rect.top &&
-        e.clientY <= rect.bottom
-
-      if (distance < proximityRadius || isInside) {
-        const proximity = isInside ? 1 : Math.max(0, 1 - (distance - rect.width / 2) / (proximityRadius - rect.width / 2))
-        const normalizedX = Math.max(-1.5, Math.min(1.5, deltaX / (rect.width / 2)))
-        const normalizedY = Math.max(-1.5, Math.min(1.5, deltaY / (rect.height / 2)))
-
-        // Tilt magnetik dinamis mengikuti posisi kursor saat mendekat
-        targetMouseRotY = normalizedX * (isInside ? 16 : 12 * proximity)
-        targetMouseRotX = -normalizedY * (isInside ? 14 : 10 * proximity)
-        targetTransX = normalizedX * 22 * proximity
-        targetTransY = normalizedY * 20 * proximity
-        targetTransZ = isInside ? 50 : 25 * proximity
-        targetScale = isInside ? 1.035 : 1 + 0.02 * proximity
-      } else {
-        // Kembali ke posisi natural bila kursor jauh
-        targetMouseRotX = 0
-        targetMouseRotY = 0
-        targetTransX = 0
-        targetTransY = 0
-        targetTransZ = 0
-        targetScale = 1
+    const updateCachedRect = () => {
+      if (screenWrapperRef.current) {
+        cachedRect = screenWrapperRef.current.getBoundingClientRect()
       }
     }
 
-    const render = () => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseClientX = e.clientX
+      mouseClientY = e.clientY
+    }
+
+    const render = (now: number) => {
+      if (!screenWrapperRef.current) {
+        animationFrameId = requestAnimationFrame(render)
+        return
+      }
+
+      // Update cached bounding rect at most once every 300ms or when missing
+      if (!cachedRect || now - lastRectTime > 300) {
+        cachedRect = screenWrapperRef.current.getBoundingClientRect()
+        lastRectTime = now
+      }
+
+      if (cachedRect && mouseClientX > -9000) {
+        const centerX = cachedRect.left + cachedRect.width / 2
+        const centerY = cachedRect.top + cachedRect.height / 2
+
+        const deltaX = mouseClientX - centerX
+        const deltaY = mouseClientY - centerY
+        const distance = Math.hypot(deltaX, deltaY)
+
+        const proximityRadius = Math.max(cachedRect.width, cachedRect.height) * 1.1
+        const isInside =
+          mouseClientX >= cachedRect.left &&
+          mouseClientX <= cachedRect.right &&
+          mouseClientY >= cachedRect.top &&
+          mouseClientY <= cachedRect.bottom
+
+        if (distance < proximityRadius || isInside) {
+          const proximity = isInside
+            ? 1
+            : Math.max(0, 1 - (distance - cachedRect.width / 2) / (proximityRadius - cachedRect.width / 2))
+          const normalizedX = Math.max(-1.5, Math.min(1.5, deltaX / (cachedRect.width / 2)))
+          const normalizedY = Math.max(-1.5, Math.min(1.5, deltaY / (cachedRect.height / 2)))
+
+          targetMouseRotY = normalizedX * (isInside ? 16 : 12 * proximity)
+          targetMouseRotX = -normalizedY * (isInside ? 14 : 10 * proximity)
+          targetTransX = normalizedX * 22 * proximity
+          targetTransY = normalizedY * 20 * proximity
+          targetTransZ = isInside ? 50 : 25 * proximity
+          targetScale = isInside ? 1.035 : 1 + 0.02 * proximity
+        } else {
+          targetMouseRotX = 0
+          targetMouseRotY = 0
+          targetTransX = 0
+          targetTransY = 0
+          targetTransZ = 0
+          targetScale = 1
+        }
+      }
+
       const scrollProgress = scrollProgressRef.current
       const baseScrollRotY = -18 + scrollProgress * 8
       const baseScrollRotX = 3 + Math.sin(scrollProgress * Math.PI * 4) * 4
@@ -256,7 +282,7 @@ export default function App() {
       const desiredRotY = baseScrollRotY + targetMouseRotY
       const desiredRotX = baseScrollRotX + targetMouseRotX
 
-      // Interpolasi halus (lerp 60-120fps)
+      // Smooth interpolation (lerp)
       currentRotY += (desiredRotY - currentRotY) * 0.08
       currentRotX += (desiredRotX - currentRotX) * 0.08
       currentTransX += (targetTransX - currentTransX) * 0.08
@@ -264,18 +290,20 @@ export default function App() {
       currentTransZ += (targetTransZ - currentTransZ) * 0.08
       currentScale += (targetScale - currentScale) * 0.08
 
-      if (screenWrapperRef.current) {
-        screenWrapperRef.current.style.transform = `translate3d(${currentTransX.toFixed(2)}px, ${currentTransY.toFixed(2)}px, ${currentTransZ.toFixed(2)}px) rotateY(${currentRotY.toFixed(2)}deg) rotateX(${currentRotX.toFixed(2)}deg) scale(${currentScale.toFixed(4)})`
-      }
+      screenWrapperRef.current.style.transform = `translate3d(${currentTransX.toFixed(2)}px, ${currentTransY.toFixed(2)}px, ${currentTransZ.toFixed(2)}px) rotateY(${currentRotY.toFixed(2)}deg) rotateX(${currentRotX.toFixed(2)}deg) scale(${currentScale.toFixed(4)})`
 
       animationFrameId = requestAnimationFrame(render)
     }
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    window.addEventListener('resize', updateCachedRect, { passive: true })
+    window.addEventListener('scroll', updateCachedRect, { passive: true })
     animationFrameId = requestAnimationFrame(render)
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('resize', updateCachedRect)
+      window.removeEventListener('scroll', updateCachedRect)
       cancelAnimationFrame(animationFrameId)
     }
   }, [])
@@ -595,17 +623,25 @@ export default function App() {
         ))}
       </div>
 
-      {/* 6. Interactive Project Detail Info Modal */}
-      <ProjectInfoModal
-        project={selectedInfoProject}
-        onClose={() => setSelectedInfoProject(null)}
-      />
+      {/* 6. Interactive Project Detail Info Modal (Lazy Loaded) */}
+      {selectedInfoProject && (
+        <Suspense fallback={null}>
+          <ProjectInfoModal
+            project={selectedInfoProject}
+            onClose={() => setSelectedInfoProject(null)}
+          />
+        </Suspense>
+      )}
 
-      {/* 7. Interactive About CodebyCraft Modal */}
-      <AboutModal
-        isOpen={isAboutOpen}
-        onClose={() => setIsAboutOpen(false)}
-      />
+      {/* 7. Interactive About CodebyCraft Modal (Lazy Loaded) */}
+      {isAboutOpen && (
+        <Suspense fallback={null}>
+          <AboutModal
+            isOpen={isAboutOpen}
+            onClose={() => setIsAboutOpen(false)}
+          />
+        </Suspense>
+      )}
     </div>
   )
 }

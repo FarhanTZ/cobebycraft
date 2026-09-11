@@ -2,7 +2,6 @@ import { useEffect, useState, useRef, useLayoutEffect } from 'react'
 import gsap from 'gsap'
 import {
   ExternalLink,
-  Calendar,
   Play,
   Pause,
   Volume2,
@@ -349,27 +348,19 @@ export default function ProjectInfoModal({ project, onClose }: ProjectInfoModalP
               ref={leftColRef}
               className="lg:col-span-6 flex flex-col justify-center space-y-6 sm:space-y-8 will-change-transform"
             >
-              <div className="space-y-3.5">
-                <div className="inline-flex items-center space-x-3">
-                  <span
-                    className="px-3 py-1 rounded-xl text-xs font-mono font-bold tracking-wider text-white bg-white/10 border border-white/15 backdrop-blur-md shadow-sm"
-                    style={{ color: displayProject.color }}
-                  >
-                    PROJECT {displayProject.number}
-                  </span>
-                  <span className="px-3 py-1 rounded-xl text-xs font-mono text-slate-300 bg-white/[0.05] border border-white/10 flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                    {displayProject.year}
-                  </span>
-                </div>
-
+              <div className="space-y-2.5">
                 {/* Title Besar & Megah */}
                 <h1 className="font-syne font-extrabold text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-white tracking-tight leading-[1.02] drop-shadow-md">
                   {displayProject.title}
                 </h1>
 
+                {/* Tanggal / Tahun di bawah Title tanpa dibungkus card */}
+                <div className="text-slate-400 font-mono text-sm sm:text-base font-normal tracking-wider">
+                  {displayProject.year}
+                </div>
+
                 {/* Subtitle Ringkas */}
-                <p className="text-slate-300 font-outfit text-xl sm:text-2xl font-medium tracking-wide">
+                <p className="text-slate-300 font-outfit text-xl sm:text-2xl font-medium tracking-wide pt-1">
                   {displayProject.subtitle}
                 </p>
               </div>
