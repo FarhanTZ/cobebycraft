@@ -3,31 +3,107 @@ import { Bell, Music, ArrowUpRight } from 'lucide-react'
 
 export default function Navbar() {
   const [isPlayingMusic, setIsPlayingMusic] = useState(false)
-  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const audioCtxRef = useRef<AudioContext | null>(null)
+  const audioBufferRef = useRef<AudioBuffer | null>(null)
+  const sourceNodeRef = useRef<AudioBufferSourceNode | null>(null)
+  const gainNodeRef = useRef<GainNode | null>(null)
 
   useEffect(() => {
-    const audio = new Audio('/audio/ambient_bgm.mp3')
-    audio.loop = true
-    audio.volume = 0.35
-    audioRef.current = audio
+    const AudioCtx =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+
+    if (AudioCtx) {
+      try {
+        const ctx = new AudioCtx()
+        audioCtxRef.current = ctx
+
+        const gain = ctx.createGain()
+        gain.gain.setValueAtTime(0.35, ctx.currentTime)
+        gain.connect(ctx.destination)
+        gainNodeRef.current = gain
+
+        // In-memory prefetch untuk mencegah browser / IDM mengira ini file download
+        fetch('/audio/ambient_bgm.data')
+          .then((res) => res.arrayBuffer())
+          .then((buf) => ctx.decodeAudioData(buf))
+          .then((decoded) => {
+            audioBufferRef.current = decoded
+          })
+          .catch(() => {})
+      } catch (_) {}
+    }
 
     return () => {
-      audio.pause()
-      audioRef.current = null
+      if (sourceNodeRef.current) {
+        try {
+          sourceNodeRef.current.stop()
+        } catch (_) {}
+      }
+      if (audioCtxRef.current) {
+        audioCtxRef.current.close().catch(() => {})
+      }
     }
   }, [])
 
-  const toggleMusic = () => {
-    if (!audioRef.current) return
+  const toggleMusic = async () => {
+    const ctx = audioCtxRef.current
+    if (!ctx) return
+
+    if (ctx.state === 'suspended') {
+      try {
+        await ctx.resume()
+      } catch (_) {}
+    }
+
     if (isPlayingMusic) {
-      audioRef.current.pause()
-      setIsPlayingMusic(false)
+      // Fade out halus saat di-pause
+      if (gainNodeRef.current) {
+        gainNodeRef.current.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 0.3)
+      }
+      setTimeout(() => {
+        if (sourceNodeRef.current) {
+          try {
+            sourceNodeRef.current.stop()
+            sourceNodeRef.current.disconnect()
+            sourceNodeRef.current = null
+          } catch (_) {}
+        }
+        setIsPlayingMusic(false)
+      }, 300)
     } else {
-      audioRef.current.play().then(() => {
-        setIsPlayingMusic(true)
-      }).catch(() => {
-        // Autoplay policy fallback
-      })
+      // Putar musik secara in-memory
+      if (!audioBufferRef.current) {
+        try {
+          const res = await fetch('/audio/ambient_bgm.data')
+          const buf = await res.arrayBuffer()
+          audioBufferRef.current = await ctx.decodeAudioData(buf)
+        } catch (_) {
+          return
+        }
+      }
+
+      if (sourceNodeRef.current) {
+        try {
+          sourceNodeRef.current.stop()
+        } catch (_) {}
+      }
+
+      const source = ctx.createBufferSource()
+      source.buffer = audioBufferRef.current
+      source.loop = true
+
+      if (gainNodeRef.current) {
+        gainNodeRef.current.gain.setValueAtTime(0.001, ctx.currentTime)
+        gainNodeRef.current.gain.linearRampToValueAtTime(0.35, ctx.currentTime + 0.4)
+        source.connect(gainNodeRef.current)
+      } else {
+        source.connect(ctx.destination)
+      }
+
+      source.start(0)
+      sourceNodeRef.current = source
+      setIsPlayingMusic(true)
     }
   }
 
