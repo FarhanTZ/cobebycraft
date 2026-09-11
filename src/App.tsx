@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { ArrowRight } from 'lucide-react'
 import Navbar from './components/Navbar'
-import TiltedScreen3D from './components/TiltedScreen3D'
+import VideoScreen3D from './components/VideoScreen3D'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
@@ -18,6 +18,7 @@ interface Project {
   year: string
   color: string
   secondaryColor: string
+  videoUrl: string
 }
 
 const PROJECTS: Project[] = [
@@ -31,6 +32,7 @@ const PROJECTS: Project[] = [
     year: '2026',
     color: '#38bdf8',
     secondaryColor: '#818cf8',
+    videoUrl: '/video/grab_video.mp4',
   },
   {
     id: 'nexus-spatial',
@@ -42,6 +44,7 @@ const PROJECTS: Project[] = [
     year: '2026',
     color: '#a855f7',
     secondaryColor: '#ec4899',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-circuit-board-technology-animation-41525-large.mp4',
   },
   {
     id: 'kroma-studio',
@@ -53,6 +56,7 @@ const PROJECTS: Project[] = [
     year: '2025',
     color: '#10b981',
     secondaryColor: '#06b6d4',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-fluid-particles-in-motion-41528-large.mp4',
   },
   {
     id: 'hyperion-finance',
@@ -64,6 +68,7 @@ const PROJECTS: Project[] = [
     year: '2025',
     color: '#f59e0b',
     secondaryColor: '#ef4444',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-tunnel-of-futuristic-neon-lights-41551-large.mp4',
   },
   {
     id: 'veloce-motors',
@@ -75,6 +80,7 @@ const PROJECTS: Project[] = [
     year: '2025',
     color: '#f43f5e',
     secondaryColor: '#fb923c',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-abstract-laser-lights-background-animation-41538-large.mp4',
   },
 ]
 
@@ -182,13 +188,13 @@ export default function App() {
       <div
         className="fixed inset-0 pointer-events-none transition-all duration-1000 ease-out z-0"
         style={{
-          background: `radial-gradient(130% 130% at 75% 45%, ${currentProject.color}15 0%, ${currentProject.secondaryColor}0a 45%, #06070c 85%)`,
+          background: `radial-gradient(130% 130% at 75% 45%, ${currentProject.color}18 0%, ${currentProject.secondaryColor}0a 45%, #06070c 85%)`,
         }}
       />
 
-      {/* 2. Primary Ambient Glowing Orb (Sisi Kanan di belakang 3D Screen) */}
+      {/* 2. Primary Ambilight Glow Orb (Sisi Kanan di belakang Video Screen) */}
       <div
-        className="fixed top-1/4 right-1/6 w-[800px] h-[800px] rounded-full blur-[180px] pointer-events-none transition-all duration-1000 ease-out opacity-45 z-0"
+        className="fixed top-1/4 right-1/6 w-[850px] h-[850px] rounded-full blur-[180px] pointer-events-none transition-all duration-1000 ease-out opacity-50 z-0"
         style={{
           background: `radial-gradient(circle, ${currentProject.color} 0%, ${currentProject.secondaryColor} 60%, transparent 85%)`,
         }}
@@ -208,69 +214,44 @@ export default function App() {
       {/* Seamless Fixed Navbar */}
       <Navbar />
 
-      {/* FIXED PINNED 3D TILTED SCREEN (Sisi Kanan Menetap Sementara Section Kiri Bergulir Mulus) */}
-      <div className="fixed top-0 right-0 w-full h-screen pointer-events-none z-10 flex items-center justify-end px-6 sm:px-10 md:px-14 overflow-hidden">
+      {/* FIXED PINNED 3D TILTED VIDEO SCREEN (Sisi Kanan Menetap & Interaktif) */}
+      <div className="fixed top-0 right-0 w-full h-screen pointer-events-none z-30 flex items-center justify-end px-6 sm:px-10 md:px-14 overflow-hidden">
         <div className="w-full max-w-[1850px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center h-full">
           <div className="lg:col-span-5 hidden lg:block" />
           
           <div className="lg:col-span-7 flex items-center justify-end relative perspective-[1800px] -ml-16 sm:-ml-28 lg:-ml-48 -mr-6 sm:-mr-10 lg:-mr-16 pointer-events-auto">
-            {/* Massive Tilted Screen */}
+            {/* Massive Tilted Video Screen */}
             <div
               ref={screenWrapperRef}
-              className="relative w-full aspect-[16/10] min-h-[480px] sm:min-h-[580px] lg:min-h-[680px] xl:min-h-[760px] max-w-[1350px] rounded-3xl transition-all duration-700 ease-out"
+              className="relative w-full aspect-[16/10] min-h-[480px] sm:min-h-[580px] lg:min-h-[680px] xl:min-h-[760px] max-w-[1350px] rounded-3xl transition-all duration-700 ease-out pointer-events-auto"
               style={{
                 transformStyle: 'preserve-3d',
                 transform: 'rotateY(-18deg) rotateX(3deg)',
               }}
             >
-              {/* Outer Glow Halo */}
+              {/* Outer Ambilight Glow Halo */}
               <div
-                className="absolute inset-0 rounded-3xl blur-3xl opacity-60 transition-colors duration-1000 -z-10"
+                className="absolute inset-0 rounded-3xl blur-3xl opacity-70 transition-colors duration-1000 -z-10"
                 style={{
                   background: `radial-gradient(circle, ${currentProject.color} 0%, transparent 75%)`,
                 }}
               />
 
-              {/* Seamless Angled Screen Container */}
-              <div className="relative w-full h-full rounded-3xl overflow-hidden backdrop-blur-3xl bg-gradient-to-br from-[#0e1220]/80 via-[#090b14]/90 to-[#05060b]/98 border border-white/[0.14] shadow-2xl shadow-black">
-                {/* Screen Top Header Bar */}
-                <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-6 py-3.5 border-b border-white/[0.08] bg-[#070913]/80 backdrop-blur-md">
-                  <div className="flex items-center space-x-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
-                  </div>
-                  <div className="text-xs font-mono text-slate-400 bg-slate-900/80 px-4 py-1 rounded-full border border-white/[0.05] transition-all">
-                    codebycraft.dev/{currentProject.id}
-                  </div>
-                  <div className="flex items-center space-x-1.5 text-xs font-semibold text-slate-300">
-                    <span
-                      className="w-2 h-2 rounded-full animate-ping"
-                      style={{ backgroundColor: currentProject.color }}
-                    />
-                    <span>LIVE</span>
-                  </div>
-                </div>
-
-                {/* 3D R3F Interactive Scene */}
-                <div className="w-full h-full pt-10">
-                  <TiltedScreen3D
-                    color={currentProject.color}
-                    secondaryColor={currentProject.secondaryColor}
-                  />
-                </div>
-
-                {/* Seamless Edge Gradient Fading Masks */}
-                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#07080d] via-transparent to-transparent opacity-60" />
-                <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-[#07080d]/80 via-transparent to-transparent opacity-70" />
-                <div className="absolute inset-0 pointer-events-none rounded-3xl ring-1 ring-inset ring-white/[0.12]" />
-              </div>
+              {/* Interactive Video Screen Component */}
+              <VideoScreen3D
+                videoUrl={currentProject.videoUrl}
+                color={currentProject.color}
+                secondaryColor={currentProject.secondaryColor}
+                title={currentProject.title}
+                client={currentProject.client}
+                year={currentProject.year}
+              />
             </div>
           </div>
         </div>
       </div>
 
-      {/* FLOATING VERTICAL SCROLL PROGRESS INDICATORS (Auto show on scroll, auto hide when idle) */}
+      {/* FLOATING VERTICAL SCROLL PROGRESS INDICATORS */}
       <div
         className={`fixed right-6 sm:right-8 top-1/2 -translate-y-1/2 z-40 flex flex-col space-y-3.5 transition-all duration-500 ease-out ${
           isScrolling
@@ -309,14 +290,14 @@ export default function App() {
       </div>
 
       {/* SEAMLESS SCROLLABLE SECTIONS (5 Project Sections) */}
-      <div className="relative z-20 w-full max-w-[1850px] mx-auto px-6 sm:px-10 md:px-14">
+      <div className="relative z-20 w-full max-w-[1850px] mx-auto px-6 sm:px-10 md:px-14 pointer-events-none">
         {PROJECTS.map((project, index) => (
           <section
             key={project.id}
             ref={(el) => {
               sectionsRef.current[index] = el
             }}
-            className="min-h-screen flex items-center relative py-28"
+            className="min-h-screen flex items-center relative py-28 pointer-events-none"
           >
             <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
               {/* KOLOM KIRI: Title Gede & Tombol Explore */}
