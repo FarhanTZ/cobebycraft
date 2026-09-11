@@ -106,10 +106,18 @@ export default function VideoScreen3D({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={() => togglePlay()}
-      className="relative w-full h-full rounded-3xl overflow-hidden backdrop-blur-3xl bg-gradient-to-br from-[#0e1220]/80 via-[#090b14]/90 to-[#05060b]/98 border border-white/[0.15] shadow-2xl shadow-black group select-none cursor-pointer pointer-events-auto"
+      className="relative w-full h-full rounded-3xl overflow-hidden backdrop-blur-3xl bg-gradient-to-br from-[#0e1220]/80 via-[#090b14]/90 to-[#05060b]/98 border border-white/[0.15] shadow-2xl shadow-black group select-none cursor-pointer pointer-events-auto transition-shadow duration-500 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_40px_rgba(56,189,248,0.2)]"
+      style={{
+        transformStyle: 'preserve-3d',
+      }}
     >
-      {/* 1. Header Bar Minimalis Layar */}
-      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-3.5 border-b border-white/[0.08] bg-[#070913]/80 backdrop-blur-md pointer-events-none">
+      {/* 1. Header Bar Minimalis Layar dengan 3D Layer Pop-out */}
+      <div
+        className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-3.5 border-b border-white/[0.08] bg-[#070913]/80 backdrop-blur-md pointer-events-none transition-transform duration-300"
+        style={{
+          transform: 'translateZ(18px)',
+        }}
+      >
         <div className="flex items-center space-x-2">
           <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
           <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
@@ -131,7 +139,12 @@ export default function VideoScreen3D({
       </div>
 
       {/* 2. Main HTML5 Video Player */}
-      <div className="w-full h-full pt-12 pb-14 bg-black relative overflow-hidden flex items-center justify-center pointer-events-auto">
+      <div
+        className="w-full h-full pt-12 pb-14 bg-black relative overflow-hidden flex items-center justify-center pointer-events-auto"
+        style={{
+          transform: 'translateZ(0px)',
+        }}
+      >
         <video
           ref={videoRef}
           src={videoUrl}
@@ -166,7 +179,8 @@ export default function VideoScreen3D({
         className="absolute inset-0 pointer-events-none transition-opacity duration-300 z-20"
         style={{
           opacity: glarePos.opacity,
-          background: `radial-gradient(circle 350px at ${glarePos.x}% ${glarePos.y}%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 40%, transparent 80%)`,
+          background: `radial-gradient(circle 420px at ${glarePos.x}% ${glarePos.y}%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.05) 40%, transparent 80%)`,
+          transform: 'translateZ(12px)',
         }}
       />
 
@@ -175,10 +189,13 @@ export default function VideoScreen3D({
       <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-[#07080d]/80 via-transparent to-transparent opacity-70 z-20" />
       <div className="absolute inset-0 pointer-events-none rounded-3xl ring-1 ring-inset ring-white/[0.14] z-20" />
 
-      {/* 5. Bottom Interactive Controller & Timeline Bar */}
+      {/* 5. Bottom Interactive Controller & Timeline Bar dengan 3D Pop-out */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="absolute bottom-0 left-0 right-0 z-30 px-6 py-3.5 bg-[#070913]/90 backdrop-blur-md border-t border-white/[0.08] flex flex-col justify-end gap-2.5 pointer-events-auto cursor-default"
+        className="absolute bottom-0 left-0 right-0 z-30 px-6 py-3.5 bg-[#070913]/90 backdrop-blur-md border-t border-white/[0.08] flex flex-col justify-end gap-2.5 pointer-events-auto cursor-default transition-transform duration-300"
+        style={{
+          transform: 'translateZ(22px)',
+        }}
       >
         {/* Scrubbing Timeline Progress Bar */}
         <div

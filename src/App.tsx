@@ -119,6 +119,100 @@ export default function App() {
     }
   }, [])
 
+  // Ref untuk mengontrol pergerakan dinamis 3D layar saat kursor didekatkan
+  const scrollProgressRef = useRef(0)
+
+  // Dynamic 3D screen tilt & proximity animation loop
+  useEffect(() => {
+    let animationFrameId: number
+
+    let targetMouseRotX = 0
+    let targetMouseRotY = 0
+    let targetTransX = 0
+    let targetTransY = 0
+    let targetTransZ = 0
+    let targetScale = 1
+
+    let currentRotX = 3
+    let currentRotY = -18
+    let currentTransX = 0
+    let currentTransY = 0
+    let currentTransZ = 0
+    let currentScale = 1
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!screenWrapperRef.current) return
+      const rect = screenWrapperRef.current.getBoundingClientRect()
+      const centerX = rect.left + rect.width / 2
+      const centerY = rect.top + rect.height / 2
+
+      const deltaX = e.clientX - centerX
+      const deltaY = e.clientY - centerY
+      const distance = Math.hypot(deltaX, deltaY)
+
+      // Radius pengaruh saat kursor mendekat ke layar (1000px)
+      const proximityRadius = Math.max(rect.width, rect.height) * 1.1
+      const isInside =
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
+
+      if (distance < proximityRadius || isInside) {
+        const proximity = isInside ? 1 : Math.max(0, 1 - (distance - rect.width / 2) / (proximityRadius - rect.width / 2))
+        const normalizedX = Math.max(-1.5, Math.min(1.5, deltaX / (rect.width / 2)))
+        const normalizedY = Math.max(-1.5, Math.min(1.5, deltaY / (rect.height / 2)))
+
+        // Tilt magnetik dinamis mengikuti posisi kursor saat mendekat
+        targetMouseRotY = normalizedX * (isInside ? 16 : 12 * proximity)
+        targetMouseRotX = -normalizedY * (isInside ? 14 : 10 * proximity)
+        targetTransX = normalizedX * 22 * proximity
+        targetTransY = normalizedY * 20 * proximity
+        targetTransZ = isInside ? 50 : 25 * proximity
+        targetScale = isInside ? 1.035 : 1 + 0.02 * proximity
+      } else {
+        // Kembali ke posisi natural bila kursor jauh
+        targetMouseRotX = 0
+        targetMouseRotY = 0
+        targetTransX = 0
+        targetTransY = 0
+        targetTransZ = 0
+        targetScale = 1
+      }
+    }
+
+    const render = () => {
+      const scrollProgress = scrollProgressRef.current
+      const baseScrollRotY = -18 + scrollProgress * 8
+      const baseScrollRotX = 3 + Math.sin(scrollProgress * Math.PI * 4) * 4
+
+      const desiredRotY = baseScrollRotY + targetMouseRotY
+      const desiredRotX = baseScrollRotX + targetMouseRotX
+
+      // Interpolasi halus (lerp 60-120fps)
+      currentRotY += (desiredRotY - currentRotY) * 0.08
+      currentRotX += (desiredRotX - currentRotX) * 0.08
+      currentTransX += (targetTransX - currentTransX) * 0.08
+      currentTransY += (targetTransY - currentTransY) * 0.08
+      currentTransZ += (targetTransZ - currentTransZ) * 0.08
+      currentScale += (targetScale - currentScale) * 0.08
+
+      if (screenWrapperRef.current) {
+        screenWrapperRef.current.style.transform = `translate3d(${currentTransX.toFixed(2)}px, ${currentTransY.toFixed(2)}px, ${currentTransZ.toFixed(2)}px) rotateY(${currentRotY.toFixed(2)}deg) rotateX(${currentRotX.toFixed(2)}deg) scale(${currentScale.toFixed(4)})`
+      }
+
+      animationFrameId = requestAnimationFrame(render)
+    }
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    animationFrameId = requestAnimationFrame(render)
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      cancelAnimationFrame(animationFrameId)
+    }
+  }, [])
+
   // Setup GSAP ScrollTrigger for seamless scrolling between sections
   useGSAP(
     () => {
@@ -160,16 +254,7 @@ export default function App() {
         end: 'bottom bottom',
         scrub: 1.2,
         onUpdate: (self) => {
-          if (screenWrapperRef.current) {
-            const rotationY = -18 + self.progress * 8
-            const rotationX = 3 + Math.sin(self.progress * Math.PI * 4) * 4
-            gsap.to(screenWrapperRef.current, {
-              rotateY: rotationY,
-              rotateX: rotationX,
-              overwrite: 'auto',
-              duration: 0.5,
-            })
-          }
+          scrollProgressRef.current = self.progress
         },
       })
     },
@@ -230,10 +315,9 @@ export default function App() {
             {/* Massive Tilted Video Screen */}
             <div
               ref={screenWrapperRef}
-              className="relative w-full aspect-[16/10] min-h-[480px] sm:min-h-[580px] lg:min-h-[680px] xl:min-h-[760px] max-w-[1350px] rounded-3xl transition-all duration-700 ease-out pointer-events-auto"
+              className="relative w-full aspect-[16/10] min-h-[480px] sm:min-h-[580px] lg:min-h-[680px] xl:min-h-[760px] max-w-[1350px] rounded-3xl will-change-transform pointer-events-auto"
               style={{
                 transformStyle: 'preserve-3d',
-                transform: 'rotateY(-18deg) rotateX(3deg)',
               }}
             >
               {/* Outer Ambilight Glow Halo */}
