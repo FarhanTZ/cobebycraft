@@ -94,6 +94,7 @@ export default function App() {
   const [activeProjectIndex, setActiveProjectIndex] = useState(0)
   const [hoveredProjectIndex, setHoveredProjectIndex] = useState<number | null>(null)
   const [isHoveringIndicators, setIsHoveringIndicators] = useState(false)
+  const [isNearRightEdge, setIsNearRightEdge] = useState(false)
   const [isScrolling, setIsScrolling] = useState(false)
   const scrollTimeoutRef = useRef<number | null>(null)
 
@@ -125,6 +126,21 @@ export default function App() {
       }
     }
   }, [])
+
+  // Detect cursor approaching the right edge of the screen to expand the indicator
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      const isRight = window.innerWidth - e.clientX <= 220
+      setIsNearRightEdge(isRight)
+    }
+
+    window.addEventListener('mousemove', handleGlobalMouseMove, { passive: true })
+    return () => {
+      window.removeEventListener('mousemove', handleGlobalMouseMove)
+    }
+  }, [])
+
+  const isIndicatorExpanded = isScrolling || isNearRightEdge || isHoveringIndicators || hoveredProjectIndex !== null
 
   // Ref untuk mengontrol pergerakan dinamis 3D layar saat kursor didekatkan
   const scrollProgressRef = useRef(0)
@@ -318,7 +334,7 @@ export default function App() {
         <CustomCursor
           color={currentProject.color}
           secondaryColor={currentProject.secondaryColor}
-          hidden={isHoveringIndicators || hoveredProjectIndex !== null}
+          hidden={isIndicatorExpanded}
         />
       )}
 
@@ -358,6 +374,13 @@ export default function App() {
         </div>
       </div>
 
+      {/* 5. Smooth Black Gradient Shadow on Right Side when Indicators are Expanded */}
+      <div
+        className={`fixed top-0 right-0 h-full w-72 sm:w-96 md:w-[440px] pointer-events-none z-30 bg-gradient-to-l from-black/85 via-black/40 to-transparent transition-opacity duration-500 ease-out ${
+          isIndicatorExpanded ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
+
       {/* FLOATING VERTICAL SCROLL PROGRESS INDICATORS WITH MINI VIDEO HOVER PREVIEWS */}
       <div
         onMouseEnter={() => setIsHoveringIndicators(true)}
@@ -365,10 +388,10 @@ export default function App() {
           setIsHoveringIndicators(false)
           setHoveredProjectIndex(null)
         }}
-        className={`fixed right-4 sm:right-6 top-1/2 -translate-y-1/2 z-40 p-3 flex flex-col space-y-3.5 transition-all duration-500 ease-out ${
-          isScrolling || isHoveringIndicators || hoveredProjectIndex !== null
-            ? 'opacity-100 translate-x-0 pointer-events-auto'
-            : 'opacity-40 translate-x-1 hover:opacity-100 hover:translate-x-0 pointer-events-auto'
+        className={`fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-40 p-4 flex flex-col space-y-4 transition-all duration-300 ease-out origin-right pointer-events-auto select-none ${
+          isIndicatorExpanded
+            ? 'scale-110 sm:scale-120 opacity-100 translate-x-0'
+            : 'scale-100 opacity-75 translate-x-0 hover:opacity-100 hover:scale-110'
         }`}
       >
         {PROJECTS.map((proj, idx) => {
@@ -438,32 +461,39 @@ export default function App() {
                 onClick={() => scrollToSection(idx)}
                 onMouseEnter={() => setHoveredProjectIndex(idx)}
                 onMouseLeave={() => setHoveredProjectIndex(null)}
-                className="group flex items-center space-x-3 cursor-pointer py-1.5 focus:outline-none"
+                className="group flex items-center space-x-3.5 cursor-pointer py-1.5 focus:outline-none"
                 title={proj.title}
               >
+                {/* Nomor Proyek */}
                 <span
                   className={`text-[11px] font-mono transition-all duration-300 ${
-                    isActive || isHovered
+                    isActive || isHovered || isIndicatorExpanded
                       ? 'text-white font-bold translate-x-0 opacity-100'
                       : 'text-slate-500 translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0'
                   }`}
                   style={{
-                    color: isHovered ? proj.color : undefined,
+                    color: isHovered ? proj.color : isActive ? '#ffffff' : undefined,
                   }}
                 >
                   {proj.number}
                 </span>
+
+                {/* Dot / Bar Dinamis */}
                 <span
                   className={`h-2.5 rounded-full transition-all duration-300 ${
                     isActive
-                      ? 'w-8 bg-cyan-400 shadow-lg shadow-cyan-400/50'
+                      ? isIndicatorExpanded
+                        ? 'w-10 bg-cyan-400 shadow-lg shadow-cyan-400/60'
+                        : 'w-8 bg-cyan-400 shadow-lg shadow-cyan-400/50'
                       : isHovered
-                      ? 'w-5 bg-white shadow-md shadow-white/40'
-                      : 'w-2 bg-white/20 group-hover:bg-white/60'
+                      ? 'w-6 bg-white shadow-md shadow-white/40'
+                      : isIndicatorExpanded
+                      ? 'w-3.5 bg-white/40 group-hover:bg-white/70'
+                      : 'w-2 bg-white/30 group-hover:bg-white/70'
                   }`}
                   style={{
                     backgroundColor: isActive ? proj.color : isHovered ? '#ffffff' : undefined,
-                    boxShadow: isActive ? `0 0 14px ${proj.color}` : undefined,
+                    boxShadow: isActive ? `0 0 16px ${proj.color}` : undefined,
                   }}
                 />
               </button>
