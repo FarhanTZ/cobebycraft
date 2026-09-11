@@ -415,11 +415,11 @@ export default function App() {
         <div className="w-full max-w-[1850px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center h-full">
           <div className="lg:col-span-5 hidden lg:block" />
           
-          <div className="lg:col-span-7 flex items-center justify-end relative perspective-[1800px] -ml-16 sm:-ml-28 lg:-ml-48 -mr-6 sm:-mr-10 lg:-mr-16 pointer-events-auto">
-            {/* Massive Tilted Video Screen */}
+          <div className="lg:col-span-7 flex items-center justify-end relative perspective-[1800px] lg:-ml-20 -mr-2 sm:-mr-4 lg:mr-0 pointer-events-auto">
+            {/* Tilted Video Screen (Optimized Balanced Size) */}
             <div
               ref={screenWrapperRef}
-              className="relative w-full aspect-[16/10] min-h-[480px] sm:min-h-[580px] lg:min-h-[680px] xl:min-h-[760px] max-w-[1350px] rounded-3xl will-change-transform pointer-events-auto"
+              className="relative w-full aspect-[16/10] min-h-[380px] sm:min-h-[480px] lg:min-h-[540px] xl:min-h-[620px] max-w-[980px] xl:max-w-[1100px] rounded-3xl will-change-transform pointer-events-auto"
               style={{
                 transformStyle: 'preserve-3d',
               }}
