@@ -21,18 +21,25 @@
     -ms-overflow-style: none;
   }
 
-  /* Sembunyikan kursor default bawaan browser pada desktop */
+  /* Sembunyikan kursor bawaan di background, tampilkan kursor telunjuk default (pointer) di tombol */
   @media (min-width: 768px) {
     *,
     *::before,
     *::after,
     html,
-    body,
+    body {
+      cursor: none;
+    }
+
     button,
     a,
     input,
+    select,
+    textarea,
+    [role="button"],
+    .cursor-pointer,
     video {
-      cursor: none !important;
+      cursor: pointer !important;
     }
   }
 

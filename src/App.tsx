@@ -306,8 +306,8 @@ export default function App() {
         secondaryColor={currentProject.secondaryColor}
       />
 
-      {/* FIXED PINNED 3D TILTED VIDEO SCREEN (Sisi Kanan Menetap & Interaktif) */}
-      <div className="fixed top-0 right-0 w-full h-screen pointer-events-none z-30 flex items-center justify-end px-6 sm:px-10 md:px-14 overflow-hidden">
+      {/* FIXED PINNED 3D TILTED VIDEO SCREEN (Sisi Kanan Menetap - Layer Belakang Teks) */}
+      <div className="fixed top-0 right-0 w-full h-screen pointer-events-none z-20 flex items-center justify-end px-6 sm:px-10 md:px-14 overflow-hidden">
         <div className="w-full max-w-[1850px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center h-full">
           <div className="lg:col-span-5 hidden lg:block" />
           
@@ -380,8 +380,8 @@ export default function App() {
         })}
       </div>
 
-      {/* SEAMLESS SCROLLABLE SECTIONS (5 Project Sections) */}
-      <div className="relative z-20 w-full max-w-[1850px] mx-auto px-6 sm:px-10 md:px-14 pointer-events-none">
+      {/* SEAMLESS SCROLLABLE SECTIONS (Layer Depan - Title Tampil di Atas Layar Video) */}
+      <div className="relative z-30 w-full max-w-[1850px] mx-auto px-6 sm:px-10 md:px-14 pointer-events-none">
         {PROJECTS.map((project, index) => (
           <section
             key={project.id}
@@ -391,15 +391,15 @@ export default function App() {
             className="min-h-screen flex items-center relative py-28 pointer-events-none"
           >
             <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-              {/* KOLOM KIRI: Title Gede & Tombol Explore */}
-              <div className="lg:col-span-5 xl:col-span-5 flex flex-col justify-center space-y-8 z-30 pointer-events-auto">
-                {/* Title Besar, Tebal, dan Megah */}
-                <h2 className="project-title font-syne font-extrabold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-white leading-[0.95] select-none drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+              {/* KOLOM KIRI: Title Gede & Tombol Explore (Berada di Layer Depan) */}
+              <div className="lg:col-span-6 xl:col-span-6 flex flex-col justify-center space-y-8 z-30 pointer-events-auto relative">
+                {/* Title Besar, Tebal, dan Megah di Depan Layar */}
+                <h2 className="project-title font-syne font-extrabold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-white leading-[0.95] select-none drop-shadow-[0_15px_35px_rgba(0,0,0,0.9)] relative z-30 max-w-2xl lg:max-w-3xl">
                   {project.title}
                 </h2>
 
                 {/* Tombol Explore */}
-                <div className="explore-button flex items-center space-x-4 pt-2">
+                <div className="explore-button flex items-center space-x-4 pt-2 relative z-30">
                   <button
                     type="button"
                     className="inline-flex items-center space-x-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-white text-slate-950 font-syne font-extrabold text-sm sm:text-base tracking-tight hover:bg-slate-200 transition-all shadow-2xl shadow-white/20 active:scale-95 cursor-pointer group"
@@ -411,7 +411,7 @@ export default function App() {
               </div>
 
               {/* Empty placeholder on the right for spatial alignment with fixed 3D screen */}
-              <div className="lg:col-span-7 hidden lg:block pointer-events-none" />
+              <div className="lg:col-span-6 hidden lg:block pointer-events-none" />
             </div>
           </section>
         ))}

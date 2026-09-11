@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { soundManager } from '../utils/soundEffects'
 
 interface CustomCursorProps {
   color?: string
@@ -188,6 +189,8 @@ export default function CustomCursor({
       animationFrameId = requestAnimationFrame(updateCursor)
     }
 
+    let lastInteractiveElement: Element | null = null
+
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement
       const isInteractive = target.closest(
@@ -195,24 +198,45 @@ export default function CustomCursor({
       )
 
       if (isInteractive) {
-        hoverScale = 1.6
-        bubble.style.borderColor = 'rgba(255, 255, 255, 0.9)'
-        bubble.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'
+        hoverScale = 1.35
+        bubble.style.borderColor = 'rgba(255, 255, 255, 0.65)'
+        bubble.style.backgroundColor = 'rgba(255, 255, 255, 0.08)'
+        bubble.style.opacity = '0.75'
+
+        // Mainkan suara bubble jika masuk ke elemen interaktif baru
+        if (isInteractive !== lastInteractiveElement) {
+          soundManager.playBubbleHover()
+          lastInteractiveElement = isInteractive
+        }
       } else {
         hoverScale = 1
         bubble.style.borderColor = 'rgba(255, 255, 255, 0.4)'
         bubble.style.backgroundColor = 'rgba(255, 255, 255, 0.06)'
+        bubble.style.opacity = '1'
+        lastInteractiveElement = null
+      }
+    }
+
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      const isInteractive = target.closest(
+        'button, a, input, [role="button"], .cursor-pointer, video'
+      )
+      if (isInteractive) {
+        soundManager.playBubbleClick()
       }
     }
 
     window.addEventListener('mousemove', onMouseMove, { passive: true })
     window.addEventListener('mouseover', handleMouseOver, { passive: true })
+    window.addEventListener('click', handleClick, { passive: true })
     animationFrameId = requestAnimationFrame(updateCursor)
 
     return () => {
       window.removeEventListener('resize', resizeCanvas)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('mouseover', handleMouseOver)
+      window.removeEventListener('click', handleClick)
       cancelAnimationFrame(animationFrameId)
     }
   }, []) // Dependency array kosong agar posisi kursor tidak ter-reset saat scroll
