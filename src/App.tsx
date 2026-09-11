@@ -92,6 +92,8 @@ const PROJECTS: Project[] = [
 export default function App() {
   const [isIntroComplete, setIsIntroComplete] = useState(false)
   const [activeProjectIndex, setActiveProjectIndex] = useState(0)
+  const [hoveredProjectIndex, setHoveredProjectIndex] = useState<number | null>(null)
+  const [isHoveringIndicators, setIsHoveringIndicators] = useState(false)
   const [isScrolling, setIsScrolling] = useState(false)
   const scrollTimeoutRef = useRef<number | null>(null)
 
@@ -316,6 +318,7 @@ export default function App() {
         <CustomCursor
           color={currentProject.color}
           secondaryColor={currentProject.secondaryColor}
+          hidden={isHoveringIndicators || hoveredProjectIndex !== null}
         />
       )}
 
@@ -355,40 +358,116 @@ export default function App() {
         </div>
       </div>
 
-      {/* FLOATING VERTICAL SCROLL PROGRESS INDICATORS */}
+      {/* FLOATING VERTICAL SCROLL PROGRESS INDICATORS WITH MINI VIDEO HOVER PREVIEWS */}
       <div
-        className={`fixed right-6 sm:right-8 top-1/2 -translate-y-1/2 z-40 flex flex-col space-y-3.5 transition-all duration-500 ease-out ${
-          isScrolling
+        onMouseEnter={() => setIsHoveringIndicators(true)}
+        onMouseLeave={() => {
+          setIsHoveringIndicators(false)
+          setHoveredProjectIndex(null)
+        }}
+        className={`fixed right-4 sm:right-6 top-1/2 -translate-y-1/2 z-40 p-3 flex flex-col space-y-3.5 transition-all duration-500 ease-out ${
+          isScrolling || isHoveringIndicators || hoveredProjectIndex !== null
             ? 'opacity-100 translate-x-0 pointer-events-auto'
-            : 'opacity-0 translate-x-4 pointer-events-none'
+            : 'opacity-40 translate-x-1 hover:opacity-100 hover:translate-x-0 pointer-events-auto'
         }`}
       >
         {PROJECTS.map((proj, idx) => {
           const isActive = idx === activeProjectIndex
+          const isHovered = hoveredProjectIndex === idx
+
           return (
-            <button
+            <div
               key={proj.id}
-              onClick={() => scrollToSection(idx)}
-              className="group flex items-center space-x-3 cursor-pointer py-1"
-              title={proj.title}
+              className="relative flex items-center justify-end"
             >
-              <span
-                className={`text-[11px] font-mono transition-all duration-300 ${
-                  isActive
-                    ? 'text-white font-bold translate-x-0 opacity-100'
-                    : 'text-slate-500 translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0'
+              {/* MINI VIDEO PREVIEW CARD (Muncul di sebelah kiri saat kursor hover) */}
+              <div
+                className={`absolute right-full mr-5 pointer-events-none transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1) flex items-center origin-right ${
+                  isHovered
+                    ? 'opacity-100 translate-x-0 scale-100'
+                    : 'opacity-0 translate-x-4 scale-90 pointer-events-none'
                 }`}
               >
-                {proj.number}
-              </span>
-              <span
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  isActive
-                    ? 'w-8 bg-cyan-400 shadow-lg shadow-cyan-400/50'
-                    : 'w-2 bg-white/20 group-hover:bg-white/50'
-                }`}
-              />
-            </button>
+                <div
+                  className="w-52 sm:w-60 p-2.5 rounded-2xl bg-[#090b14]/90 backdrop-blur-2xl border border-white/20 shadow-2xl overflow-hidden flex flex-col gap-2"
+                  style={{
+                    boxShadow: `0 12px 35px -10px ${proj.color}55`,
+                    borderColor: `${proj.color}70`,
+                  }}
+                >
+                  {/* Thumbnail Video Autoplay Mini */}
+                  <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-black/60 shadow-inner">
+                    <video
+                      src={proj.videoUrl}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+                    
+                    {/* Badge Nomor Project */}
+                    <span
+                      className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-white bg-black/70 backdrop-blur-md border border-white/10"
+                      style={{ color: proj.color }}
+                    >
+                      {proj.number}
+                    </span>
+
+                    {/* Badge Tahun Project */}
+                    <span className="absolute top-2 right-2 px-2 py-0.5 rounded-md text-[9px] font-mono text-slate-300 bg-black/60 backdrop-blur-md">
+                      {proj.year}
+                    </span>
+                  </div>
+
+                  {/* Info Ringkas Project */}
+                  <div className="px-1 py-0.5">
+                    <div className="text-[13px] font-bold font-syne text-white truncate tracking-tight">
+                      {proj.title}
+                    </div>
+                    <div className="text-[10px] text-slate-400 truncate font-outfit mt-0.5">
+                      {proj.subtitle}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* TOMBOL INDIKATOR SCROLL (Dot & Bar) */}
+              <button
+                onClick={() => scrollToSection(idx)}
+                onMouseEnter={() => setHoveredProjectIndex(idx)}
+                onMouseLeave={() => setHoveredProjectIndex(null)}
+                className="group flex items-center space-x-3 cursor-pointer py-1.5 focus:outline-none"
+                title={proj.title}
+              >
+                <span
+                  className={`text-[11px] font-mono transition-all duration-300 ${
+                    isActive || isHovered
+                      ? 'text-white font-bold translate-x-0 opacity-100'
+                      : 'text-slate-500 translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0'
+                  }`}
+                  style={{
+                    color: isHovered ? proj.color : undefined,
+                  }}
+                >
+                  {proj.number}
+                </span>
+                <span
+                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                    isActive
+                      ? 'w-8 bg-cyan-400 shadow-lg shadow-cyan-400/50'
+                      : isHovered
+                      ? 'w-5 bg-white shadow-md shadow-white/40'
+                      : 'w-2 bg-white/20 group-hover:bg-white/60'
+                  }`}
+                  style={{
+                    backgroundColor: isActive ? proj.color : isHovered ? '#ffffff' : undefined,
+                    boxShadow: isActive ? `0 0 14px ${proj.color}` : undefined,
+                  }}
+                />
+              </button>
+            </div>
           )
         })}
       </div>

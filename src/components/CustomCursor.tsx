@@ -4,6 +4,7 @@ import { soundManager } from '../utils/soundEffects'
 interface CustomCursorProps {
   color?: string
   secondaryColor?: string
+  hidden?: boolean
 }
 
 interface SmokeParticle {
@@ -25,19 +26,22 @@ interface SmokeParticle {
 export default function CustomCursor({
   color = '#38bdf8',
   secondaryColor = '#818cf8',
+  hidden = false,
 }: CustomCursorProps) {
   const cursorBubbleRef = useRef<HTMLDivElement>(null!)
   const cursorGlowRef = useRef<HTMLDivElement>(null!)
   const canvasRef = useRef<HTMLCanvasElement>(null!)
 
-  // Ref untuk warna agar tidak mereset posisi mouse saat ganti project/scroll
+  // Ref untuk warna & status hidden agar tidak mereset posisi mouse saat ganti project/scroll
   const colorRef = useRef(color)
   const secondaryColorRef = useRef(secondaryColor)
+  const hiddenRef = useRef(hidden)
 
   useEffect(() => {
     colorRef.current = color
     secondaryColorRef.current = secondaryColor
-  }, [color, secondaryColor])
+    hiddenRef.current = hidden
+  }, [color, secondaryColor, hidden])
 
   useEffect(() => {
     const bubble = cursorBubbleRef.current
@@ -85,8 +89,8 @@ export default function CustomCursor({
       const deltaY = mouseY - prevY
       const speed = Math.hypot(deltaX, deltaY)
 
-      // Emisi partikel gumpalan asap mengepul saat mouse bergerak
-      if (speed > 1.5 && particles.length < 65) {
+      // Emisi partikel gumpalan asap mengepul saat mouse bergerak (hanya jika cursor tidak disembunyikan)
+      if (!hiddenRef.current && speed > 1.5 && particles.length < 65) {
         const count = Math.min(Math.floor(speed / 6) + 1, 4)
         for (let i = 0; i < count; i++) {
           const spreadAngle = Math.random() * Math.PI * 2
@@ -198,10 +202,13 @@ export default function CustomCursor({
       )
 
       if (isInteractive) {
-        hoverScale = 1.35
-        bubble.style.borderColor = 'rgba(255, 255, 255, 0.65)'
-        bubble.style.backgroundColor = 'rgba(255, 255, 255, 0.08)'
-        bubble.style.opacity = '0.75'
+        hoverScale = 1.15
+        // Abu-abu transparan halus agar tidak mengganggu pandangan saat ingin klik
+        bubble.style.borderColor = 'rgba(200, 205, 215, 0.35)'
+        bubble.style.backgroundColor = 'rgba(120, 125, 140, 0.18)'
+        bubble.style.opacity = '0.5'
+        bubble.style.backdropFilter = 'blur(2px)'
+        glow.style.opacity = '0.05'
 
         // Mainkan suara bubble jika masuk ke elemen interaktif baru
         if (isInteractive !== lastInteractiveElement) {
@@ -210,9 +217,11 @@ export default function CustomCursor({
         }
       } else {
         hoverScale = 1
-        bubble.style.borderColor = 'rgba(255, 255, 255, 0.4)'
-        bubble.style.backgroundColor = 'rgba(255, 255, 255, 0.06)'
+        bubble.style.borderColor = 'rgba(255, 255, 255, 0.45)'
+        bubble.style.backgroundColor = 'rgba(255, 255, 255, 0.07)'
         bubble.style.opacity = '1'
+        bubble.style.backdropFilter = 'blur(4px)'
+        glow.style.opacity = '0.35'
         lastInteractiveElement = null
       }
     }
@@ -242,7 +251,11 @@ export default function CustomCursor({
   }, []) // Dependency array kosong agar posisi kursor tidak ter-reset saat scroll
 
   return (
-    <div className="hidden md:block pointer-events-none fixed inset-0 z-[9999] overflow-hidden">
+    <div
+      className={`hidden md:block pointer-events-none fixed inset-0 z-[9999] overflow-hidden transition-opacity duration-200 ${
+        hidden ? 'opacity-0' : 'opacity-100'
+      }`}
+    >
       {/* Canvas Jejak Asap / Volumetric Smoke Trail */}
       <canvas
         ref={canvasRef}
