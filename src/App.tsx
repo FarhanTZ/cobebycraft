@@ -130,8 +130,8 @@ export default function App() {
   // Detect cursor approaching specifically the floating indicator area on the right
   useEffect(() => {
     const handleGlobalMouseMove = (e: MouseEvent) => {
-      const isNearIndicatorVertically = Math.abs(e.clientY - window.innerHeight / 2) < 220
-      const isNearIndicatorHorizontally = window.innerWidth - e.clientX <= 80
+      const isNearIndicatorVertically = Math.abs(e.clientY - window.innerHeight / 2) < 240
+      const isNearIndicatorHorizontally = window.innerWidth - e.clientX <= 110
       setIsNearRightEdge(isNearIndicatorVertically && isNearIndicatorHorizontally)
     }
 
@@ -141,7 +141,8 @@ export default function App() {
     }
   }, [])
 
-  const isIndicatorExpanded = isScrolling || isNearRightEdge || isHoveringIndicators || hoveredProjectIndex !== null
+  const isIndicatorHovered = isNearRightEdge || isHoveringIndicators || hoveredProjectIndex !== null
+  const isIndicatorVisible = isScrolling || isIndicatorHovered
 
   // Ref untuk mengontrol pergerakan dinamis 3D layar saat kursor didekatkan
   const scrollProgressRef = useRef(0)
@@ -375,10 +376,10 @@ export default function App() {
         </div>
       </div>
 
-      {/* 5. Smooth Black Gradient Shadow on Right Side when Indicators are Expanded */}
+      {/* 5. Smooth Black Gradient Shadow on Right Side when Indicators are Visible */}
       <div
         className={`fixed top-0 right-0 h-full w-72 sm:w-96 md:w-[440px] pointer-events-none z-30 bg-gradient-to-l from-black/85 via-black/40 to-transparent transition-opacity duration-500 ease-out ${
-          isIndicatorExpanded ? 'opacity-100' : 'opacity-0'
+          isIndicatorVisible ? 'opacity-100' : 'opacity-0'
         }`}
       />
 
@@ -389,10 +390,12 @@ export default function App() {
           setIsHoveringIndicators(false)
           setHoveredProjectIndex(null)
         }}
-        className={`fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-40 p-4 flex flex-col space-y-4 transition-all duration-300 ease-out origin-right pointer-events-auto select-none ${
-          isIndicatorExpanded
-            ? 'scale-110 sm:scale-120 opacity-100 translate-x-0'
-            : 'scale-100 opacity-75 translate-x-0 hover:opacity-100 hover:scale-110'
+        className={`fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-40 p-4 flex flex-col space-y-4 transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) origin-right select-none ${
+          isIndicatorHovered
+            ? 'scale-110 sm:scale-120 opacity-100 translate-x-0 pointer-events-auto'
+            : isIndicatorVisible
+            ? 'scale-100 opacity-90 translate-x-0 pointer-events-auto'
+            : 'scale-95 opacity-0 translate-x-8 pointer-events-none'
         }`}
       >
         {PROJECTS.map((proj, idx) => {
@@ -433,14 +436,16 @@ export default function App() {
                     borderColor: `${proj.color}90`,
                   }}
                 >
-                  <video
-                    src={proj.videoUrl}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover"
-                  />
+                  {isHovered && (
+                    <video
+                      src={proj.videoUrl}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                 </div>
               </div>
 
@@ -455,9 +460,9 @@ export default function App() {
                 {/* Nomor Proyek */}
                 <span
                   className={`text-[11px] font-mono transition-all duration-300 ${
-                    isActive || isHovered || isIndicatorExpanded
+                    isActive || isHovered || isIndicatorHovered
                       ? 'text-white font-bold translate-x-0 opacity-100'
-                      : 'text-slate-500 translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0'
+                      : 'text-slate-400 translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0'
                   }`}
                   style={{
                     color: isHovered ? proj.color : isActive ? '#ffffff' : undefined,
@@ -470,12 +475,12 @@ export default function App() {
                 <span
                   className={`h-2.5 rounded-full transition-all duration-300 ${
                     isActive
-                      ? isIndicatorExpanded
+                      ? isIndicatorHovered
                         ? 'w-10 bg-cyan-400 shadow-lg shadow-cyan-400/60'
                         : 'w-8 bg-cyan-400 shadow-lg shadow-cyan-400/50'
                       : isHovered
                       ? 'w-6 bg-white shadow-md shadow-white/40'
-                      : isIndicatorExpanded
+                      : isIndicatorHovered
                       ? 'w-3.5 bg-white/40 group-hover:bg-white/70'
                       : 'w-2 bg-white/30 group-hover:bg-white/70'
                   }`}
