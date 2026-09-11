@@ -127,11 +127,12 @@ export default function App() {
     }
   }, [])
 
-  // Detect cursor approaching the right edge of the screen to expand the indicator
+  // Detect cursor approaching specifically the floating indicator area on the right
   useEffect(() => {
     const handleGlobalMouseMove = (e: MouseEvent) => {
-      const isRight = window.innerWidth - e.clientX <= 220
-      setIsNearRightEdge(isRight)
+      const isNearIndicatorVertically = Math.abs(e.clientY - window.innerHeight / 2) < 220
+      const isNearIndicatorHorizontally = window.innerWidth - e.clientX <= 80
+      setIsNearRightEdge(isNearIndicatorVertically && isNearIndicatorHorizontally)
     }
 
     window.addEventListener('mousemove', handleGlobalMouseMove, { passive: true })
@@ -334,7 +335,7 @@ export default function App() {
         <CustomCursor
           color={currentProject.color}
           secondaryColor={currentProject.secondaryColor}
-          hidden={isIndicatorExpanded}
+          hidden={isHoveringIndicators || hoveredProjectIndex !== null}
         />
       )}
 

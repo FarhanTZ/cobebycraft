@@ -21,7 +21,7 @@
     -ms-overflow-style: none;
   }
 
-  /* Sembunyikan kursor bawaan di background, tampilkan kursor telunjuk default (pointer) di tombol */
+  /* Sembunyikan kursor bawaan di background, tampilkan kursor telunjuk stabil di tombol dan semua elemen di dalamnya */
   @media (min-width: 768px) {
     *,
     *::before,
@@ -32,12 +32,16 @@
     }
 
     button,
+    button *,
     a,
+    a *,
     input,
     select,
     textarea,
     [role="button"],
+    [role="button"] *,
     .cursor-pointer,
+    .cursor-pointer *,
     video {
       cursor: pointer !important;
     }
