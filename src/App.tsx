@@ -8,6 +8,7 @@ import VideoScreen3D from './components/VideoScreen3D'
 import CustomCursor from './components/CustomCursor'
 import IntroScreen from './components/IntroScreen'
 import ProjectInfoModal, { type ProjectDetail } from './components/ProjectInfoModal'
+import AboutModal from './components/AboutModal'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
@@ -132,6 +133,7 @@ export default function App() {
   const [isIntroComplete, setIsIntroComplete] = useState(false)
   const [activeProjectIndex, setActiveProjectIndex] = useState(0)
   const [selectedInfoProject, setSelectedInfoProject] = useState<ProjectDetail | null>(null)
+  const [isAboutOpen, setIsAboutOpen] = useState(false)
   const [hoveredProjectIndex, setHoveredProjectIndex] = useState<number | null>(null)
   const [isHoveringIndicators, setIsHoveringIndicators] = useState(false)
   const [isNearRightEdge, setIsNearRightEdge] = useState(false)
@@ -369,14 +371,14 @@ export default function App() {
       <div className="fixed inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_70%,transparent_100%)] pointer-events-none z-0" />
 
       {/* Seamless Fixed Navbar */}
-      <Navbar />
+      <Navbar onOpenAbout={() => setIsAboutOpen(true)} />
 
       {/* Fluid Liquid Bubble Custom Cursor */}
       {isIntroComplete && (
         <CustomCursor
           color={currentProject.color}
           secondaryColor={currentProject.secondaryColor}
-          hidden={isHoveringIndicators || hoveredProjectIndex !== null || selectedInfoProject !== null}
+          hidden={isHoveringIndicators || hoveredProjectIndex !== null || selectedInfoProject !== null || isAboutOpen}
         />
       )}
 
@@ -597,6 +599,12 @@ export default function App() {
       <ProjectInfoModal
         project={selectedInfoProject}
         onClose={() => setSelectedInfoProject(null)}
+      />
+
+      {/* 7. Interactive About CodebyCraft Modal */}
+      <AboutModal
+        isOpen={isAboutOpen}
+        onClose={() => setIsAboutOpen(false)}
       />
     </div>
   )

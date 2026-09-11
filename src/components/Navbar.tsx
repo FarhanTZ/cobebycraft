@@ -1,7 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { Bell, Music, ArrowUpRight } from 'lucide-react'
 
-export default function Navbar() {
+interface NavbarProps {
+  onOpenAbout?: () => void
+}
+
+export default function Navbar({ onOpenAbout }: NavbarProps) {
   const [isPlayingMusic, setIsPlayingMusic] = useState(false)
   const audioCtxRef = useRef<AudioContext | null>(null)
   const audioBufferRef = useRef<AudioBuffer | null>(null)
@@ -112,9 +116,13 @@ export default function Navbar() {
       <div className="w-full flex items-center justify-between px-6 sm:px-10 md:px-14 py-4 sm:py-5">
         {/* Title Brand - Samping Paling Kiri (Dikecilkan Dikit) */}
         <div className="flex items-center">
-          <span className="font-syne font-bold text-xl sm:text-2xl tracking-tight text-white select-none hover:text-cyan-400 transition-colors cursor-pointer drop-shadow-sm">
+          <button
+            type="button"
+            onClick={onOpenAbout}
+            className="font-syne font-bold text-xl sm:text-2xl tracking-tight text-white select-none hover:text-cyan-400 transition-colors cursor-pointer drop-shadow-sm focus:outline-none"
+          >
             CodebyCraft
-          </span>
+          </button>
         </div>
 
         {/* Right Menu Items - Samping Paling Kanan */}
@@ -131,7 +139,8 @@ export default function Navbar() {
           {/* About Link */}
           <button
             type="button"
-            className="text-slate-200 hover:text-white px-2.5 py-1 rounded-lg hover:bg-white/10 transition-all text-xs sm:text-[13px] font-semibold tracking-normal cursor-pointer"
+            onClick={onOpenAbout}
+            className="text-slate-200 hover:text-white px-2.5 py-1 rounded-lg hover:bg-white/10 transition-all text-xs sm:text-[13px] font-semibold tracking-normal cursor-pointer active:scale-95"
           >
             About
           </button>

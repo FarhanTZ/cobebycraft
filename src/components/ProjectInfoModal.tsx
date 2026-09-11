@@ -11,7 +11,6 @@ import {
   Layers,
   Box,
   Cpu,
-  Sparkles,
   Gamepad2,
   Palette,
   Boxes,
@@ -81,8 +80,24 @@ function TechCircleBadge({ tag, brandColor }: { tag: string; brandColor: string 
     if (normalized.includes('vite')) {
       return <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-[#bd34fe] group-hover:scale-110 transition-transform" />
     }
-    if (normalized.includes('shader') || normalized.includes('webgl') || normalized.includes('pbr')) {
-      return <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-[#f59e0b] group-hover:rotate-45 transition-transform" />
+    if (normalized.includes('webgl')) {
+      return (
+        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#ef4444] group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          <polyline points="3.29 7 12 12 20.71 7" />
+          <line x1="12" y1="22" x2="12" y2="12" />
+        </svg>
+      )
+    }
+    if (normalized.includes('shader') || normalized.includes('pbr')) {
+      return (
+        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#f59e0b] group-hover:rotate-12 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="6 3 18 3 22 9 12 22 2 9" />
+          <line x1="2" y1="9" x2="22" y2="9" />
+          <line x1="12" y1="22" x2="6" y2="9" />
+          <line x1="12" y1="22" x2="18" y2="9" />
+        </svg>
+      )
     }
     if (normalized.includes('audio') || normalized.includes('synth') || normalized.includes('sound')) {
       return <Radio className="w-5 h-5 sm:w-6 sm:h-6 text-[#ef4444] group-hover:scale-110 transition-transform" />
