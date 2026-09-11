@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
 interface IntroScreenProps {
   onComplete: () => void
@@ -30,88 +30,20 @@ const SHARDS = [
 export default function IntroScreen({ onComplete }: IntroScreenProps) {
   const [progress, setProgress] = useState(0)
   const [isShattered, setIsShattered] = useState(false)
-  const soundPlayedRef = useRef(false)
-  const audioCtxRef = useRef<AudioContext | null>(null)
-  const audioBufferRef = useRef<AudioBuffer | null>(null)
-  const audioElemRef = useRef<HTMLAudioElement | null>(null)
-
-  const playSound = () => {
-    if (soundPlayedRef.current) return
-    soundPlayedRef.current = true
-
-    if (audioCtxRef.current) {
-      if (audioCtxRef.current.state === 'suspended') {
-        audioCtxRef.current.resume().catch(() => {})
-      }
-      if (audioBufferRef.current) {
-        try {
-          const src = audioCtxRef.current.createBufferSource()
-          src.buffer = audioBufferRef.current
-          src.connect(audioCtxRef.current.destination)
-          src.start(0)
-          return
-        } catch (_) {}
-      }
-    }
-
-    if (audioElemRef.current) {
-      audioElemRef.current.currentTime = 0
-      audioElemRef.current.volume = 1.0
-      audioElemRef.current.play().catch(() => {})
-    }
-  }
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     document.documentElement.style.overflow = 'hidden'
     window.scrollTo(0, 0)
 
-    // Siapkan audio
-    const audioElem = new Audio('/audio/codebycraft.WAV')
-    audioElem.preload = 'auto'
-    audioElem.volume = 1.0
-    audioElemRef.current = audioElem
-
-    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
-    if (AudioCtx) {
-      try {
-        const ctx = new AudioCtx()
-        audioCtxRef.current = ctx
-
-        fetch('/audio/codebycraft.WAV')
-          .then((res) => res.arrayBuffer())
-          .then((buf) => ctx.decodeAudioData(buf))
-          .then((decoded) => {
-            audioBufferRef.current = decoded
-          })
-          .catch(() => {})
-      } catch (_) {}
-    }
-
-    const autoUnlock = () => {
-      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
-        audioCtxRef.current.resume().catch(() => {})
-      }
-    }
-
-    window.addEventListener('mousemove', autoUnlock, { passive: true })
-    window.addEventListener('pointerdown', autoUnlock, { passive: true })
-    window.addEventListener('keydown', autoUnlock, { passive: true })
-    window.addEventListener('touchstart', autoUnlock, { passive: true })
-
-    // Otomatis jalankan loading tanpa perlu klik
+    // Otomatis jalankan loading
     const startTime = performance.now()
-    const totalDuration = 2600 // 2.6 detik durasi loading
+    const totalDuration = 2400 // 2.4 detik durasi loading
 
     const updateLoader = (now: number) => {
       const elapsed = now - startTime
       const currentProgress = Math.min(100, Math.floor((elapsed / totalDuration) * 100))
       setProgress(currentProgress)
-
-      // Mainkan suara tepat saat progress mencapai 50%
-      if (currentProgress >= 50 && !soundPlayedRef.current) {
-        playSound()
-      }
 
       if (currentProgress < 100) {
         requestAnimationFrame(updateLoader)
@@ -133,17 +65,6 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
     return () => {
       document.body.style.overflow = ''
       document.documentElement.style.overflow = ''
-      window.removeEventListener('mousemove', autoUnlock)
-      window.removeEventListener('pointerdown', autoUnlock)
-      window.removeEventListener('keydown', autoUnlock)
-      window.removeEventListener('touchstart', autoUnlock)
-      if (audioElemRef.current) {
-        audioElemRef.current.pause()
-        audioElemRef.current = null
-      }
-      if (audioCtxRef.current) {
-        audioCtxRef.current.close().catch(() => {})
-      }
     }
   }, [onComplete])
 
@@ -157,12 +78,22 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
 
   return (
     <div
-      className={`fixed inset-0 z-[99999] flex items-center justify-center pointer-events-none select-none overflow-hidden perspective-[1200px] ${
-        isShattered ? 'pointer-events-none' : 'bg-black'
-      }`}
+      className="fixed inset-0 z-[99999] flex items-center justify-center pointer-events-none select-none overflow-hidden perspective-[1200px]"
     >
+      {/* 0. Solid Black Underlay Background (Mencegah bocor warna website sebelum/saat pecah) */}
+      <div
+        className={`absolute inset-0 bg-black transition-opacity duration-700 ease-out ${
+          isShattered ? 'opacity-0' : 'opacity-100'
+        }`}
+      />
+
       {/* 1. KEPINGAN-KEPINGAN KACA 3D (3D SHATTERED GLASS PIECES) */}
-      <div className="absolute inset-0 pointer-events-none" style={{ transformStyle: 'preserve-3d' }}>
+      <div
+        className={`absolute inset-0 pointer-events-none transition-opacity duration-300 ${
+          isShattered ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
         {SHARDS.map((shard) => {
           const transform = isShattered
             ? `translate3d(${shard.tx * 1.5}px, ${shard.ty * 1.5}px, ${shard.tz * 1.8}px) rotateX(${shard.rx * 2}deg) rotateY(${shard.ry * 2}deg) rotateZ(${shard.rz * 2}deg) scale(0.6)`
@@ -171,7 +102,7 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
           return (
             <div
               key={shard.id}
-              className={`absolute inset-0 bg-[#06070c] transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              className={`absolute inset-0 bg-black transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                 isShattered
                   ? 'opacity-0 border border-cyan-400/60 shadow-[0_0_25px_rgba(56,189,248,0.5)] filter blur-[1px]'
                   : 'opacity-100 border-none'

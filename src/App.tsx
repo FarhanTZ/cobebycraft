@@ -276,7 +276,7 @@ export default function App() {
       ref={containerRef}
       className="relative bg-[#06070c] text-slate-100 selection:bg-cyan-500/30 font-outfit"
     >
-      {/* 0. Cinematic Opening Splash Intro with codebycraft.WAV sound */}
+      {/* 0. Cinematic Opening Splash Intro */}
       {!isIntroComplete && (
         <IntroScreen onComplete={() => setIsIntroComplete(true)} />
       )}
