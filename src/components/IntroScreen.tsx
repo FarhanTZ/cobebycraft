@@ -34,6 +34,8 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     document.documentElement.style.overflow = 'hidden'
+    document.body.style.cursor = 'none'
+    document.documentElement.style.cursor = 'none'
     window.scrollTo(0, 0)
 
     // Otomatis jalankan loading
@@ -52,6 +54,8 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
         setIsShattered(true)
         document.body.style.overflow = ''
         document.documentElement.style.overflow = ''
+        document.body.style.cursor = ''
+        document.documentElement.style.cursor = ''
 
         // Selesai setelah serpihan meledak keluar
         setTimeout(() => {
@@ -65,6 +69,8 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
     return () => {
       document.body.style.overflow = ''
       document.documentElement.style.overflow = ''
+      document.body.style.cursor = ''
+      document.documentElement.style.cursor = ''
     }
   }, [onComplete])
 
@@ -78,7 +84,9 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[99999] flex items-center justify-center pointer-events-none select-none overflow-hidden perspective-[1200px]"
+      className={`fixed inset-0 z-[999999] flex items-center justify-center select-none overflow-hidden perspective-[1200px] cursor-none ${
+        isShattered ? 'pointer-events-none' : 'pointer-events-auto'
+      }`}
     >
       {/* 0. Solid Black Underlay Background (Mencegah bocor warna website sebelum/saat pecah) */}
       <div
